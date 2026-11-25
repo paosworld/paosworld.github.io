@@ -160,6 +160,23 @@
       transform: translateY(-1px);
       box-shadow: 0 6px 18px rgba(133, 117, 212, 0.18);
     }
+    .dev-watermark .type-text {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+    .dev-watermark .type-cursor {
+      display: inline-block;
+      width: 1px;
+      height: 12px;
+      background: var(--acento);
+      margin-left: 2px;
+      animation: blinkCursor 0.75s infinite;
+    }
+    @keyframes blinkCursor {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
     .dev-watermark a {
       color: var(--acento);
       font-weight: 800;
@@ -175,7 +192,6 @@
         padding: 6px 10px;
         font-size: 10.5px;
         max-width: calc(100vw - 190px);
-        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
@@ -432,8 +448,7 @@
   </main>
 
   <div class="dev-watermark" aria-label="Créditos de desarrollo">
-    <span>Web por</span>
-    <a href="https://wa.me/584241913036?text=Hola%20Kevin%2C%20vi%20la%20p%C3%A1gina%20de%20Pao%27s%20World%20y%20me%20gustar%C3%ADa%20cotizar%20una%20web%20para%20mi%20negocio." target="_blank" rel="noopener noreferrer" title="Contactar a Kevin Santolo por WhatsApp">Kevin Santolo</a>
+    <span class="type-text" id="devWatermarkType"></span><span class="type-cursor" id="devWatermarkCursor" aria-hidden="true"></span>
   </div>
 
   <a id="fabTikTok" class="fab-social fab-tt" href="https://www.tiktok.com/@.paos.world" target="_blank" rel="noopener noreferrer" aria-label="Visitar TikTok de Pao's World" title="Visitar TikTok de Pao's World">
@@ -673,6 +688,7 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzzxDh7WMqoyJBMTQhQFH9gXEVPXqZGVmzZz7apkmNsRm1iFZZuhsGLJDEmagpZi_z1LA/exec";
     const TIKTOK_URL = "https://www.tiktok.com/@.paos.world";
+    const DEV_WA_URL = "https://wa.me/584241913036?text=Hola%20Kevin%2C%20vi%20la%20p%C3%A1gina%20de%20Pao%27s%20World%20y%20me%20gustar%C3%ADa%20cotizar%20una%20web%20para%20mi%20negocio.";
     const CACHE_KEY = "paos_world_catalog_v1";
 
     const PAISES = [
@@ -728,12 +744,78 @@
     const fmtBs = (val) => (Number(val) || 0).toLocaleString("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     document.addEventListener("DOMContentLoaded", () => {
+      iniciarSecuenciaMarcaAgua();
       poblarPaises();
       cargarCatalogo();
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") cerrarModal("modalLightbox");
       });
     });
+
+    function iniciarSecuenciaMarcaAgua() {
+      const box = $("devWatermarkType");
+      const cursor = $("devWatermarkCursor");
+      if (!box) return;
+
+      const etapas = [
+        { partes: ["Diseño ", { link: "Kevin Santolo" }, " · Costos bajos · Calidad"], duracion: 1750 },
+        { partes: ["Diseño ", { link: "Kevin Santolo" }, " · Contacta ahora"], duracion: 1650 },
+        { partes: ["Diseño ", { link: "Kevin Santolo" }], duracion: 0 }
+      ];
+
+      function renderTextoPlano(str) {
+        box.textContent = str;
+      }
+
+      function renderFinalConEnlace() {
+        box.textContent = "";
+        box.appendChild(document.createTextNode("Diseño "));
+        const a = document.createElement("a");
+        a.href = DEV_WA_URL;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.title = "Contactar a Kevin Santolo por WhatsApp";
+        a.textContent = "Kevin Santolo";
+        box.appendChild(a);
+        if (cursor) cursor.style.display = "none";
+      }
+
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+      async function escribirTexto(texto, delayMs) {
+        for (let i = 1; i <= texto.length; i++) {
+          renderTextoPlano(texto.slice(0, i));
+          await sleep(delayMs);
+        }
+      }
+
+      async function borrarTexto(delayMs) {
+        let actual = box.textContent || "";
+        while (actual.length > 0) {
+          actual = actual.slice(0, -1);
+          renderTextoPlano(actual);
+          await sleep(delayMs);
+        }
+      }
+
+      (async () => {
+        const s1 = "Diseño · Kevin Santolo · Costos bajos · Calidad";
+        const s2 = "Diseño · Kevin Santolo · Contacta ahora";
+        const s3 = "Diseño · Kevin Santolo";
+
+        await escribirTexto(s1, 24);
+        await sleep(650);
+        await borrarTexto(12);
+
+        await escribirTexto(s2, 24);
+        await sleep(650);
+        await borrarTexto(12);
+
+        await escribirTexto(s3, 28);
+        await sleep(320);
+        renderFinalConEnlace();
+      })();
+    }
 
     function poblarPaises() {
       $("cliCodigoPais").innerHTML = PAISES.map(([cod, label]) =>
