@@ -18,7 +18,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body { background: var(--fondo); color: var(--texto); min-height: 100vh; padding-bottom: 195px; }
+    body { background: var(--fondo); color: var(--texto); min-height: 100vh; padding-bottom: 255px; }
     .topbar {
       background: linear-gradient(135deg, var(--primario), var(--acento));
       color: var(--blanco);
@@ -142,6 +142,8 @@
       text-decoration: none; z-index: 45; transition: transform 0.15s ease, filter 0.15s ease, background-color 0.15s ease;
     }
     .fab-social:hover { transform: scale(1.05); }
+    .fab-tt { bottom: 210px; background: #111111; box-shadow: 0 8px 20px rgba(17, 17, 17, 0.32); }
+    .fab-tt:hover { filter: brightness(1.12); }
     .fab-ig { bottom: 146px; background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF, #515BD4); box-shadow: 0 8px 20px rgba(129, 52, 175, 0.35); }
     .fab-ig:hover { filter: brightness(1.06); }
     .fab-wa { bottom: 82px; background-color: #25D366; box-shadow: 0 8px 20px rgba(37, 211, 102, 0.35); }
@@ -296,6 +298,9 @@
 <body>
 
   <svg width="0" height="0" style="position:absolute;visibility:hidden;" aria-hidden="true">
+    <symbol id="ico-tt" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.26 8.26 0 0 0 4.83 1.56V6.79a4.85 4.85 0 0 1-1.06-.1z"/>
+    </symbol>
     <symbol id="ico-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
       <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
@@ -330,6 +335,10 @@
       </div>
 
       <div class="top-actions">
+        <a id="headerTikTok" class="top-pill" href="https://www.tiktok.com/@.paos.world" target="_blank" rel="noopener noreferrer" aria-label="Visitar TikTok de Pao's World" title="Síguenos en TikTok @.paos.world">
+          <svg width="15" height="15" aria-hidden="true"><use href="#ico-tt"></use></svg>
+          <span id="headerTtText">@.paos.world</span>
+        </a>
         <a id="headerInstagram" class="top-pill" href="https://www.instagram.com/paos.world/" target="_blank" rel="noopener noreferrer" aria-label="Visitar Instagram de Pao's World" title="Síguenos en Instagram @paos.world">
           <svg width="16" height="16" aria-hidden="true"><use href="#ico-ig"></use></svg>
           <span id="headerIgText">@paos.world</span>
@@ -362,7 +371,7 @@
         </svg>
       </div>
       <div><span class="entregas-badge">ENTREGAS</span></div>
-      <div class="entregas-linea">Entrega en Candelaria — Panadería San Bernardino Bakery • Envío nacional</div>
+      <div class="entregas-linea">Entrega en Candelaria — Panadería San Bernardino • Envío nacional</div>
       <div class="entregas-acuerdo">-Previo acuerdo-</div>
       <div class="entregas-horario">Lunes a Domingo, de 10:00 am a 7:00 pm.</div>
     </section>
@@ -376,6 +385,10 @@
       <p style="color: var(--texto-suave);">Cargando catálogo de Pao's World...</p>
     </section>
   </main>
+
+  <a id="fabTikTok" class="fab-social fab-tt" href="https://www.tiktok.com/@.paos.world" target="_blank" rel="noopener noreferrer" aria-label="Visitar TikTok de Pao's World" title="Visitar TikTok de Pao's World">
+    <svg width="24" height="24" aria-hidden="true"><use href="#ico-tt"></use></svg>
+  </a>
 
   <a id="fabInstagram" class="fab-social fab-ig" href="https://www.instagram.com/paos.world/" target="_blank" rel="noopener noreferrer" aria-label="Visitar Instagram de Pao's World" title="Visitar Instagram de Pao's World">
     <svg width="26" height="26" aria-hidden="true"><use href="#ico-ig"></use></svg>
@@ -440,7 +453,7 @@
           <div class="field">
             <label>Modalidad de Entrega *</label>
             <select id="cliEntrega" required>
-              <option value="Entrega en Candelaria - Panadería San Bernardino Bakery">Entrega en Candelaria - Panadería San Bernardino Bakery</option>
+              <option value="Entrega en Candelaria - Panadería San Bernardino">Entrega en Candelaria - Panadería San Bernardino</option>
               <option value="Envío nacional">Envío nacional</option>
             </select>
           </div>
@@ -489,7 +502,7 @@
 
       <div class="admin-tabs">
         <button class="btn btn-primary" type="button" onclick="cambiarTabAdmin('tabTasa', this)">Tasa BCV y Ajustes</button>
-        <button class="btn btn-soft" type="button" id="btnTabProductos" onclick="cambiarTabAdmin('tabProductos', this)">Productos (<span id="adminProdCountTab">0</span>)</button>
+        <button class="btn btn-soft" type="button" id="btnTabProductos" onclick="cambiarTabAdmin('tabProductos', this)">Productos</button>
         <button class="btn btn-soft" type="button" onclick="cambiarTabAdmin('tabPedidos', this)">Pedidos</button>
         <button class="btn btn-soft" type="button" onclick="cambiarTabAdmin('tabMovs', this)">Movimientos DEBE/HABER</button>
       </div>
@@ -609,6 +622,7 @@
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzzxDh7WMqoyJBMTQhQFH9gXEVPXqZGVmzZz7apkmNsRm1iFZZuhsGLJDEmagpZi_z1LA/exec";
+    const TIKTOK_URL = "https://www.tiktok.com/@.paos.world";
     const CACHE_KEY = "paos_world_catalog_v1";
 
     const PAISES = [
@@ -644,6 +658,7 @@
         subtitulo_tienda: "The World of Princess • Caracas, Venezuela",
         whatsapp: "584242855733",
         instagram: "@paos.world",
+        tiktok: "@.paos.world",
         color_primario: "#A99BE8",
         color_fondo: "#F4F2FC",
         color_acento: "#8575D4",
@@ -759,6 +774,11 @@
       $("brandTitle").textContent = c.nombre_tienda || "Pao's World";
       $("brandSub").textContent = c.subtitulo_tienda || "The World of Princess • Caracas, Venezuela";
       document.title = `${c.nombre_tienda || "Pao's World"} — Catálogo`;
+
+      const ttHandle = String(c.tiktok || "@.paos.world").trim() || "@.paos.world";
+      $("headerTikTok").href = TIKTOK_URL;
+      $("fabTikTok").href = TIKTOK_URL;
+      $("headerTtText").textContent = ttHandle;
 
       const igHandle = String(c.instagram || "@paos.world").trim();
       const igUser = igHandle.replace(/^@/, "") || "paos.world";
@@ -1178,14 +1198,6 @@
       return String($("adminSearchInput")?.value || "").trim().toLowerCase();
     }
 
-    function actualizarContadorProductosTab() {
-      const total = Array.isArray(state.adminData?.productos) ? state.adminData.productos.length : 0;
-      const q = obtenerFiltroAdmin();
-      if ($("adminProdCountTab")) {
-        $("adminProdCountTab").textContent = q ? `${total} • ${filtrarListaProductosAdmin(state.adminData?.productos || []).length}` : String(total);
-      }
-    }
-
     function filtrarListaProductosAdmin(productos) {
       const lista = Array.isArray(productos) ? productos : [];
       const q = obtenerFiltroAdmin();
@@ -1198,7 +1210,6 @@
       if ($("btnLimpiarAdminSearch")) {
         $("btnLimpiarAdminSearch").style.display = q ? "inline-flex" : "none";
       }
-      actualizarContadorProductosTab();
       if (!state.adminData) return;
       renderListaCategoriasAdmin(state.adminData.categorias || []);
       renderTablaProductosAdmin(state.adminData.productos || []);
@@ -1637,7 +1648,6 @@
       const est = String(cfg.estado_servicio || "ACTIVO").toUpperCase();
       $("btnEstadoTienda").textContent = `Estado: ${est}`;
 
-      actualizarContadorProductosTab();
       renderListaCategoriasAdmin(d.categorias || []);
       renderTablaProductosAdmin(d.productos || []);
       renderTablaPedidosAdmin(d.pedidos || [], cfg);
