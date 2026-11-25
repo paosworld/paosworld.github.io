@@ -56,6 +56,7 @@
     }
     .btn:active { transform: scale(0.97); }
     .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-sm { padding: 5px 9px; font-size: 12px; border-radius: 8px; }
     .btn-white { background: var(--blanco); color: var(--acento); }
     .btn-primary { background: var(--acento); color: var(--blanco); }
     .btn-soft { background: #ECE7FA; color: var(--texto); }
@@ -225,6 +226,32 @@
     .admin-panel { display: none; }
     .admin-panel.active { display: block; }
     .admin-grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .cat-manager-box {
+      background: #FAF9FE; border: 1px solid var(--borde); border-radius: 12px;
+      padding: 12px; margin-bottom: 14px;
+    }
+    .cat-manager-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; flex-wrap: wrap; margin-bottom: 10px;
+    }
+    .cat-manager-title { font-size: 13.5px; font-weight: 800; color: var(--texto); }
+    .cat-create-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .cat-create-row input {
+      flex: 1; min-width: 190px; padding: 8px 11px; border-radius: 10px;
+      border: 1.5px solid var(--borde); font-size: 13px; color: var(--texto); background: var(--blanco);
+    }
+    .cat-order-list {
+      display: flex; flex-direction: column; gap: 6px; margin-top: 10px;
+      max-height: 210px; overflow-y: auto;
+    }
+    .cat-order-item {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      background: var(--blanco); border: 1px solid var(--borde); border-radius: 9px;
+      padding: 6px 10px; font-size: 12.5px;
+    }
+    .cat-order-name { font-weight: 700; color: var(--texto); }
+    .cat-order-actions { display: flex; align-items: center; gap: 4px; }
+
     .table-wrap { overflow-x: auto; border: 1px solid var(--borde); border-radius: 12px; }
     table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
     th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--borde); }
@@ -460,6 +487,18 @@
       </div>
 
       <div class="admin-panel" id="tabProductos">
+        <div class="cat-manager-box">
+          <div class="cat-manager-head">
+            <div class="cat-manager-title">Categorías del Catálogo (Crear y Ordenar ↑ / ↓)</div>
+            <div class="cat-create-row">
+              <input type="text" id="nuevaCategoriaInput" placeholder="Nueva categoría (ej. Labiales, Brochas...)" onkeydown="if(event.key==='Enter'){event.preventDefault();crearCategoriaAdmin();}" />
+              <button class="btn btn-primary btn-sm" type="button" id="btnCrearCategoria" onclick="crearCategoriaAdmin()">+ Crear</button>
+            </div>
+          </div>
+          <div class="cat-order-list" id="adminCatOrderList"></div>
+          <div class="status-msg" id="msgAdminCat"></div>
+        </div>
+
         <div class="admin-grid-2" style="margin-bottom: 14px; background: #FAF9FE; padding: 12px; border-radius: 12px; border: 1px solid var(--borde);">
           <div class="field"><label>ID (vacío para crear nuevo)</label><input type="text" id="prodId" placeholder="Ej. maquillaje1 o vacío" /></div>
           <div class="field"><label>Categoría</label><select id="prodCategoria"></select></div>
@@ -638,7 +677,7 @@
 
       $("brandTitle").textContent = c.nombre_tienda || "Pao's World";
       $("brandSub").textContent = c.subtitulo_tienda || "The World of Princess • Caracas, Venezuela";
-      document.title = `${c.nombre_tienda || "Pao's World"} — Catálogo Oficial`;
+      document.title = `${c.nombre_tienda || "Pao's World"} — Catálogo`;
 
       const igHandle = String(c.instagram || "@paos.world").trim();
       const igUser = igHandle.replace(/^@/, "") || "paos.world";
@@ -1041,6 +1080,95 @@
         .join("\n");
     }
 
+    function renderListaCategoriasAdmin(categorias, categoriaSeleccionadaActual) {
+      const cats = Array.isArray(categorias) ? categorias : [];
+      const selectEl = $("prodCategoria");
+      if (selectEl) {
+        const prevVal = categoriaSeleccionadaActual || selectEl.value;
+        selectEl.innerHTML = cats
+          .map(c => `<option value="${escAttr(c.categoria)}">${escHtml(c.categoria)}</option>`)
+          .join("");
+        if (prevVal && cats.some(c => c.categoria === prevVal)) {
+          selectEl.value = prevVal;
+        }
+      }
+
+      const listEl = $("adminCatOrderList");
+      if (!listEl) return;
+      if (!cats.length) {
+        listEl.innerHTML = `<p style="color: var(--texto-suave); font-size: 12.5px;">No hay categorías registradas aún.</p>`;
+        return;
+      }
+
+      listEl.innerHTML = cats.map((c, idx) => {
+        const esPrimero = idx === 0;
+        const esUltimo = idx === cats.length - 1;
+        return `
+          <div class="cat-order-item">
+            <span class="cat-order-name">${idx + 1}. ${escHtml(c.categoria)}</span>
+            <div class="cat-order-actions">
+              <button class="btn btn-soft btn-sm" type="button" title="Ascender categoría" ${esPrimero ? "disabled" : ""} onclick="moverCategoriaAdmin('${escAttr(c.categoria)}', 'up')">↑</button>
+              <button class="btn btn-soft btn-sm" type="button" title="Descender categoría" ${esUltimo ? "disabled" : ""} onclick="moverCategoriaAdmin('${escAttr(c.categoria)}', 'down')">↓</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function crearCategoriaAdmin() {
+      const input = $("nuevaCategoriaInput");
+      const msg = $("msgAdminCat");
+      const btn = $("btnCrearCategoria");
+      const nombreCat = String(input?.value || "").trim();
+
+      if (!nombreCat) {
+        mostrarMsg(msg, "Escribe un nombre para la nueva categoría.", false);
+        return;
+      }
+
+      btn.disabled = true;
+      try {
+        const data = await postAdmin({ action: "addCategory", categoria: nombreCat });
+        if (!data.ok) {
+          mostrarMsg(msg, data.error || "No se pudo crear la categoría.", false);
+          return;
+        }
+        input.value = "";
+        mostrarMsg(msg, `Categoría "${data.categoria}" creada.`, true);
+        await refrescarAdminData();
+        if ($("prodCategoria")) $("prodCategoria").value = data.categoria;
+      } catch (err) {
+        mostrarMsg(msg, err.message || "Error al crear categoría.", false);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function moverCategoriaAdmin(categoria, direction) {
+      const msg = $("msgAdminCat");
+      try {
+        const data = await postAdmin({
+          action: "reorderCategory",
+          categoria: categoria,
+          direction: direction
+        });
+        if (!data.ok) {
+          mostrarMsg(msg, data.error || "No se pudo cambiar el orden.", false);
+          return;
+        }
+        mostrarMsg(
+          msg,
+          direction === "up"
+            ? `"${categoria}" ascendió en el orden.`
+            : `"${categoria}" descendió en el orden.`,
+          true
+        );
+        await refrescarAdminData();
+      } catch (err) {
+        mostrarMsg(msg, err.message || "Error al reordenar categoría.", false);
+      }
+    }
+
     function poblarPanelAdmin() {
       const d = state.adminData;
       const cfg = d.config || {};
@@ -1057,9 +1185,7 @@
       const est = String(cfg.estado_servicio || "ACTIVO").toUpperCase();
       $("btnEstadoTienda").textContent = `Estado: ${est}`;
 
-      $("prodCategoria").innerHTML = (d.categorias || [])
-        .map(c => `<option value="${escAttr(c.categoria)}">${escHtml(c.categoria)}</option>`)
-        .join("");
+      renderListaCategoriasAdmin(d.categorias || []);
 
       $("adminProdBody").innerHTML = (d.productos || []).map(p => {
         const promo = parseFloat(p.precio_promo_divisas);
