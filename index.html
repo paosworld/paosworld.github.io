@@ -3,338 +3,1297 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pao's World | The World of Princess</title>
+  <title>Pao's World — Catálogo Oficial</title>
   <style>
     :root {
-      --primary: #7c4dff;
-      --primary-dark: #5e35b1;
-      --bg: #f8f6fc;
-      --card: #ffffff;
-      --text: #2d2438;
-      --muted: #6e637d;
+      --primario: #A99BE8;
+      --fondo: #F4F2FC;
+      --acento: #8575D4;
+      --texto: #231E33;
+      --texto-suave: #665E80;
+      --blanco: #FFFFFF;
+      --borde: #E2DCF5;
+      --exito: #1F8A5B;
+      --peligro: #C63D5A;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding-bottom: 80px; }
-    header {
-      background: linear-gradient(135deg, #651fff, #9575cd);
-      color: white;
-      padding: 20px 16px;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(101, 31, 255, 0.2);
+
+- { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background: var(--fondo); color: var(--texto); min-height: 100vh; padding-bottom: 195px; }
+
+    .topbar {
+      background: linear-gradient(135deg, var(--primario), var(--acento));
+      color: var(--blanco);
+      padding: 12px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: 0 4px 18px rgba(105, 88, 175, 0.22);
     }
-    header h1 { font-size: 1.8rem; letter-spacing: 0.5px; }
-    header p { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
-    .top-bar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 12px;
-      font-size: 0.85rem;
+    .topbar-inner { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-logo {
+      min-width: 50px; max-width: 155px; height: 48px; padding: 4px 8px; border-radius: 12px;
+      background: rgba(255,255,255,0.18); border: 1.5px solid rgba(255,255,255,0.55);
+      display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; overflow: hidden; flex-shrink: 0;
     }
-    .badge {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 5px 12px;
-      border-radius: 20px;
-      color: white;
-      text-decoration: none;
+    .brand-logo img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 8px; }
+    .brand-title { font-size: 19px; font-weight: 800; letter-spacing: 0.2px; }
+    .brand-sub { font-size: 12px; opacity: 0.92; }
+
+    .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .top-pill {
+      background: rgba(255,255,255,0.22); backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.45); color: var(--blanco);
+      padding: 7px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 700;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+      transition: transform 0.12s ease, background 0.15s ease;
     }
-    .info-box {
-      background: var(--card);
-      margin: 14px auto;
-      max-width: 960px;
-      padding: 12px 16px;
-      border-radius: 12px;
-      text-align: center;
-      font-size: 0.85rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    a.top-pill:hover { background: rgba(255,255,255,0.34); transform: scale(1.03); }
+
+    .btn {
+      border: none; border-radius: 10px; padding: 9px 14px; font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: transform 0.12s ease, opacity 0.15s ease, background 0.15s ease;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none;
     }
-    .controls {
-      max-width: 960px;
-      margin: 0 auto 14px;
-      padding: 0 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-white { background: var(--blanco); color: var(--acento); }
+    .btn-primary { background: var(--acento); color: var(--blanco); }
+    .btn-soft { background: #ECE7FA; color: var(--texto); }
+    .btn-danger { background: #FDECEF; color: var(--peligro); }
+    .btn-wa-mini {
+      background: #25D366; color: #FFFFFF; padding: 5px 10px; font-size: 11.5px;
+      border-radius: 8px; margin-top: 5px; display: inline-flex; align-items: center; gap: 4px;
+      font-weight: 700; text-decoration: none;
     }
-    input[type="search"] {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1px solid #dcd3eb;
-      border-radius: 10px;
-      font-size: 0.95rem;
+    .btn-wa-mini:hover { background: #1ebe5d; }
+
+    .container { max-width: 1180px; margin: 18px auto; padding: 0 16px; }
+    .banner-pausa {
+      background: #FFF3CD; border: 1px solid #F2D388; color: #6B4E00;
+      padding: 14px 16px; border-radius: 14px; margin-bottom: 16px; font-weight: 600; display: none;
     }
-    .categories {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 4px;
+    .portada-box {
+      width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 16px;
+      border: 1px solid var(--borde); background: linear-gradient(135deg, var(--primario), var(--acento)); display: none;
     }
-    .cat-btn {
-      background: var(--card);
-      border: 1px solid #dcd3eb;
-      padding: 6px 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      white-space: nowrap;
-      font-size: 0.85rem;
+    .portada-box img { width: 100%; max-height: 260px; object-fit: contain; display: block; margin: 0 auto; }
+
+    .entregas-card {
+      background: var(--blanco); border: 1px solid var(--borde); border-radius: 16px;
+      padding: 16px 18px; margin-bottom: 16px; text-align: center; box-shadow: 0 4px 14px rgba(85, 68, 150, 0.05);
     }
-    .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-    .grid {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 14px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
-      gap: 14px;
+    .entregas-icon { display: inline-flex; color: var(--acento); margin-bottom: 6px; }
+    .entregas-badge {
+      display: inline-block; background: var(--acento); color: var(--blanco);
+      font-size: 12px; font-weight: 800; letter-spacing: 1.6px; padding: 5px 14px; border-radius: 6px; margin-bottom: 8px;
     }
+    .entregas-linea { font-size: 14px; font-weight: 700; color: var(--texto); line-height: 1.45; }
+    .entregas-acuerdo { font-size: 12.5px; font-weight: 700; color: var(--texto-suave); margin-top: 2px; }
+    .entregas-horario { font-size: 13px; font-style: italic; color: var(--texto-suave); margin-top: 6px; }
+
+    .controls-bar {
+      background: var(--blanco); border: 1px solid var(--borde); border-radius: 16px;
+      padding: 14px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px;
+      box-shadow: 0 4px 14px rgba(85, 68, 150, 0.05);
+    }
+    .search-input {
+      width: 100%; padding: 11px 14px; border-radius: 11px; border: 1.5px solid var(--borde);
+      font-size: 14px; color: var(--texto); background: #FAF9FE; outline: none;
+    }
+    .search-input:focus { border-color: var(--acento); background: var(--blanco); }
+    .cats-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+    .cat-chip {
+      padding: 7px 14px; border-radius: 999px; border: 1px solid var(--borde);
+      background: #FAF9FE; color: var(--texto-suave); font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap;
+    }
+    .cat-chip.active { background: var(--acento); color: var(--blanco); border-color: var(--acento); }
+
+    .grid-productos { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
     .card {
-      background: var(--card);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      background: var(--blanco); border: 1px solid var(--borde); border-radius: 16px; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 14px rgba(85, 68, 150, 0.05);
+    }
+    .card-img {
+      height: 175px; background: linear-gradient(135deg, #EFEBFB, #E4DDF8);
+      display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
+    }
+    .card-img.clickable { cursor: zoom-in; }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s ease; }
+    .card-img.clickable:hover img { transform: scale(1.03); }
+    .card-badge {
+      position: absolute; top: 10px; left: 10px; background: rgba(35, 30, 51, 0.72);
+      color: var(--blanco); font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 999px; pointer-events: none;
+    }
+    .card-body { padding: 13px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .card-title { font-size: 14.5px; font-weight: 800; line-height: 1.3; }
+    .card-var { font-size: 12px; color: var(--texto-suave); min-height: 16px; }
+    .price-box { margin-top: auto; padding-top: 8px; }
+    .price-usd { font-size: 17px; font-weight: 800; color: var(--acento); }
+    .price-promo { font-size: 11.5px; font-weight: 700; color: var(--exito); margin-top: 2px; }
+    .price-bs { font-size: 12.5px; color: var(--texto-suave); font-weight: 600; }
+    .card-footer { padding: 0 13px 13px; }
+    .stock-txt { font-size: 11.5px; margin-bottom: 8px; font-weight: 700; color: var(--texto-suave); }
+    .stock-out { color: var(--peligro); }
+
+    .fab-social {
+      position: fixed; right: 20px; width: 54px; height: 54px; border-radius: 50%;
+      color: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      text-decoration: none; z-index: 45; transition: transform 0.15s ease, filter 0.15s ease, background-color 0.15s ease;
+    }
+    .fab-social:hover { transform: scale(1.05); }
+    .fab-ig { bottom: 146px; background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF, #515BD4); box-shadow: 0 8px 20px rgba(129, 52, 175, 0.35); }
+    .fab-ig:hover { filter: brightness(1.06); }
+    .fab-wa { bottom: 82px; background-color: #25D366; box-shadow: 0 8px 20px rgba(37, 211, 102, 0.35); }
+    .fab-wa:hover { background-color: #1ebe5d; }
+    .fab-cart {
+      position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, var(--primario), var(--acento));
+      color: var(--blanco); border: none; border-radius: 999px; padding: 14px 20px;
+      font-size: 14px; font-weight: 800; box-shadow: 0 8px 24px rgba(96, 75, 175, 0.35);
+      cursor: pointer; z-index: 45; display: flex; align-items: center; gap: 8px;
+    }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(24, 19, 43, 0.52);
+      display: none; align-items: center; justify-content: center; padding: 14px; z-index: 60; overflow-y: auto;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: var(--blanco); border-radius: 18px; width: 100%; max-width: 540px;
+      max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 18px 40px rgba(25, 18, 52, 0.25);
+    }
+    .modal-box.wide { max-width: 980px; }
+    .lightbox-box { max-width: 680px; text-align: center; }
+    .lightbox-img-wrap { width: 100%; background: #F6F4FD; border-radius: 14px; overflow: hidden; margin-bottom: 14px; border: 1px solid var(--borde); }
+    .lightbox-img-wrap img { width: 100%; max-height: 65vh; object-fit: cover; display: block; }
+    .modal-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--borde); gap: 10px; text-align: left;
+    }
+    .modal-head h3 { font-size: 17px; font-weight: 800; }
+
+    .field { margin-bottom: 12px; }
+    .field label { display: block; font-size: 12.5px; font-weight: 700; margin-bottom: 5px; color: var(--texto-suave); }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 9px 12px; border-radius: 10px; border: 1.5px solid var(--borde);
+      font-size: 13.5px; color: var(--texto); background: #FAF9FE;
+    }
+    .phone-split { display: flex; gap: 8px; align-items: stretch; }
+    .phone-split select { width: 148px; flex-shrink: 0; }
+    .phone-split input { flex: 1; min-width: 0; }
+
+    .cart-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--borde); font-size: 13px; }
+    .qty-controls { display: flex; align-items: center; gap: 6px; }
+    .qty-btn { width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--borde); background: var(--fondo); font-weight: 800; cursor: pointer; }
+    .promo-note { font-size: 12px; color: var(--exito); font-weight: 700; margin-top: 6px; }
+
+    .order-desc-box {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #FAF9FE;
+      border: 1px solid var(--borde);
+      font-size: 12.5px;
+    }
+    .order-desc-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--texto);
+      margin-bottom: 8px;
+    }
+    .order-desc-list {
+      list-style: none;
       display: flex;
       flex-direction: column;
+      gap: 4px;
+      color: var(--texto-suave);
+      margin-bottom: 8px;
     }
-    .card img {
-      width: 100%;
-      height: 170px;
-      object-fit: cover;
-      cursor: zoom-in;
-      background: #eee;
+    .order-desc-total {
+      font-weight: 800;
+      color: var(--texto);
+      border-top: 1px dashed var(--borde);
+      padding-top: 8px;
+      line-height: 1.45;
     }
-    .card-body { padding: 10px; flex: 1; display: flex; flex-direction: column; }
-    .card-cat { font-size: 0.7rem; color: var(--primary); font-weight: 700; text-transform: uppercase; }
-    .card-title { font-size: 0.95rem; font-weight: 600; margin: 4px 0; }
-    .card-price { font-size: 1rem; font-weight: 700; color: var(--primary-dark); }
-    .card-bs { font-size: 0.8rem; color: var(--muted); }
-    .card-stock { font-size: 0.75rem; color: var(--muted); margin: 4px 0 8px; }
-    .add-btn {
-      margin-top: auto;
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 8px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
+    .order-desc-bs {
+      color: var(--acento);
+      font-weight: 800;
+      margin-top: 3px;
     }
-    .add-btn:disabled { background: #ccc; cursor: not-allowed; }
-    .cart-float {
-      position: fixed;
-      bottom: 18px;
-      right: 18px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 30px;
-      font-weight: 700;
-      box-shadow: 0 4px 14px rgba(124, 77, 255, 0.4);
-      cursor: pointer;
-      z-index: 100;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.65);
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 200;
-    }
-    .modal.open { display: flex; }
-    .modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 16px;
-      max-width: 420px;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-    }
-    .modal-content img { width: 100%; border-radius: 10px; }
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 0.9rem;
-    }
-    .wa-btn {
-      width: 100%;
-      background: #25D366;
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: 700;
-      margin-top: 14px;
-      cursor: pointer;
-    }
+
+    .admin-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .admin-panel { display: none; }
+    .admin-panel.active { display: block; }
+    .admin-grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--borde); border-radius: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--borde); }
+    th { background: #F5F2FC; font-weight: 800; color: var(--texto); }
+
+    .status-msg { padding: 10px 12px; border-radius: 10px; font-size: 13px; font-weight: 700; margin-top: 10px; display: none; }
+    .status-msg.ok { display: block; background: #E7F7EF; color: var(--exito); }
+    .status-msg.err { display: block; background: #FDECEF; color: var(--peligro); }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>👑 Pao's World</h1>
-  <p>THE WORLD OF PRINCESS • Caracas, Venezuela</p>
-  <div class="top-bar">
-    <a class="badge" href="https://instagram.com/paos.world" target="_blank">@paos.world</a>
-    <a class="badge" href="https://wa.me/584242855733" target="_blank">+58 424-2855733</a>
-    <span class="badge" id="bcv-badge">BCV: Cargando...</span>
+  <svg width="0" height="0" style="position:absolute;visibility:hidden;" aria-hidden="true">
+    <symbol id="ico-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+    </symbol>
+    <symbol id="ico-wa" viewBox="0 0 32 32" fill="currentColor">
+      <path d="M16 3C8.82 3 3 8.82 3 16c0 2.29.6 4.52 1.73 6.49L3.5 28.5l6.22-1.63A12.93 12.93 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm7.57 18.47c-.32.9-1.85 1.72-2.58 1.83-.67.1-1.52.14-2.45-.16-.56-.18-1.29-.42-2.22-.82-3.91-1.69-6.46-5.63-6.66-5.89-.2-.26-1.59-2.12-1.59-4.04 0-1.92 1.01-2.87 1.37-3.26.36-.39.78-.49 1.04-.49.26 0 .52 0 .75.01.24.01.56-.09.88.67.32.78 1.09 2.66 1.19 2.85.1.19.16.42.03.68-.13.26-.19.42-.39.65-.2.23-.41.51-.59.69-.2.2-.4.41-.17.8.23.39 1.02 1.68 2.19 2.72 1.5 1.34 2.77 1.75 3.16 1.95.39.2.62.16.85-.1.23-.26.98-1.14 1.24-1.53.26-.39.52-.32.88-.19.36.13 2.29 1.08 2.68 1.28.39.2.65.29.75.46.1.16.1.94-.22 1.84z"/>
+    </symbol>
+  </svg>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-logo" id="brandLogo">PW</div>
+        <div>
+          <div class="brand-title" id="brandTitle">Pao's World</div>
+          <div class="brand-sub" id="brandSub">The World of Princess • Caracas, Venezuela</div>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <a id="headerInstagram" class="top-pill" href="https://www.instagram.com/paos.world/" target="_blank" rel="noopener noreferrer" aria-label="Visitar Instagram de Pao's World" title="Síguenos en Instagram @paos.world">
+          <svg width="16" height="16" aria-hidden="true"><use href="#ico-ig"></use></svg>
+          <span id="headerIgText">@paos.world</span>
+        </a>
+        <a id="headerWhatsApp" class="top-pill" href="https://wa.me/584242855733" target="_blank" rel="noopener noreferrer" aria-label="Escribir por WhatsApp a Pao's World" title="Escríbenos por WhatsApp">
+          <svg width="16" height="16" aria-hidden="true"><use href="#ico-wa"></use></svg>
+          <span id="headerWaText">+58 424-2855733</span>
+        </a>
+        <div class="top-pill" id="tasaPill">BCV: Bs. 890,00</div>
+        <button class="btn btn-white" type="button" onclick="abrirModalPin()">Admin</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="banner-pausa" id="bannerPausa">
+      La tienda se encuentra temporalmente pausada. Puedes explorar el catálogo o escribirnos por WhatsApp.
+    </div>
+
+    <div class="portada-box" id="portadaBox">
+      <img id="portadaImg" src="" alt="Portada Pao's World" />
+    </div>
+
+    <section class="entregas-card" aria-label="Información de entregas">
+      <div class="entregas-icon">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 9l1.5-5h15L21 9"></path>
+          <path d="M3 9v11h18V9"></path>
+          <path d="M9 20v-6h6v6"></path>
+          <path d="M3 9c0 1.66 1.34 3 3 3s3-1.34 3-3c0 1.66 1.34 3 3 3s3-1.34 3-3c0 1.66 1.34 3 3 3s3-1.34 3-3"></path>
+        </svg>
+      </div>
+      <div><span class="entregas-badge">ENTREGAS</span></div>
+      <div class="entregas-linea">Entrega en Candelaria — Panadería San Bernardino Bakery • Envío nacional</div>
+      <div class="entregas-acuerdo">-Previo acuerdo-</div>
+      <div class="entregas-horario">Lunes a Domingo, de 10:00 am a 7:00 pm.</div>
+    </section>
+
+    <section class="controls-bar">
+      <input type="text" id="searchInput" class="search-input" placeholder="Buscar maquillaje, skincare, uñas, serums, papelería, navidad..." oninput="renderCatalogo()" />
+      <div class="cats-row" id="catsRow"></div>
+    </section>
+
+    <section class="grid-productos" id="gridProductos">
+      <p style="color: var(--texto-suave);">Cargando catálogo de Pao's World...</p>
+    </section>
+  </main>
+
+  <a id="fabInstagram" class="fab-social fab-ig" href="https://www.instagram.com/paos.world/" target="_blank" rel="noopener noreferrer" aria-label="Visitar Instagram de Pao's World" title="Visitar Instagram de Pao's World">
+    <svg width="26" height="26" aria-hidden="true"><use href="#ico-ig"></use></svg>
+  </a>
+
+  <a id="fabWhatsApp" class="fab-social fab-wa" href="https://wa.me/584242855733" target="_blank" rel="noopener noreferrer" aria-label="Chatear por WhatsApp con Paola" title="Chatear por WhatsApp con Paola">
+    <svg width="28" height="28" aria-hidden="true"><use href="#ico-wa"></use></svg>
+  </a>
+
+  <button class="fab-cart" type="button" onclick="abrirCarrito()">
+    <span>Carrito</span>
+    <span id="cartCountBadge">(0)</span>
+    <span>•</span>
+    <span id="cartTotalUsdBadge">$0.00</span>
+  </button>
+
+  <div class="modal-backdrop" id="modalLightbox" onclick="cerrarLightboxBackdrop(event)">
+    <div class="modal-box lightbox-box">
+      <div class="modal-head">
+        <div>
+          <h3 id="lbTitulo"></h3>
+          <small style="color: var(--texto-suave);" id="lbDetalle"></small>
+        </div>
+        <button class="btn btn-soft" type="button" onclick="cerrarModal('modalLightbox')">✕</button>
+      </div>
+      <div class="lightbox-img-wrap">
+        <img id="lbImg" src="" alt="" />
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+        <div style="text-align: left;">
+          <div class="price-usd" id="lbPrecioUsd"></div>
+          <div class="price-bs" id="lbPrecioBs"></div>
+        </div>
+        <button class="btn btn-primary" type="button" id="lbBtnAgregar">Agregar al carrito</button>
+      </div>
+    </div>
   </div>
-</header>
 
-<div class="info-box">
-  <strong>ENTREGAS:</strong> Candelaria – Panadería San Bernardino Bakery • Envío nacional<br />
-  <small>Previo acuerdo • Lunes a Domingo, de 10:00 am a 7:00 pm</small>
-</div>
+  <div class="modal-backdrop" id="modalCarrito">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3>Tu Pedido en Pao's World</h3>
+        <button class="btn btn-soft" type="button" onclick="cerrarModal('modalCarrito')">✕</button>
+      </div>
+      <div id="cartItemsList"></div>
+      <div class="promo-note" id="cartPromoNote"></div>
+      <div id="orderDescriptionBox"></div>
 
-<div class="controls">
-  <input type="search" id="search" placeholder="Buscar maquillaje, uñas, skincare, papelería..." />
-  <div class="categories" id="categories"></div>
-</div>
-
-<div class="grid" id="grid"></div>
-
-<button class="cart-float" id="cart-btn">🛒 Carrito (0) - $0.00</button>
-
-<!-- Modal Zoom -->
-<div class="modal" id="zoom-modal" onclick="this.classList.remove('open')">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <img id="zoom-img" src="" alt="Vista previa" />
+      <form id="formPedido" style="margin-top: 14px;" onsubmit="enviarPedido(event)">
+        <div class="field">
+          <label>Nombre y Apellido *</label>
+          <input type="text" id="cliNombre" required placeholder="Ej. Valentina Pérez" />
+        </div>
+        <div class="field">
+          <label>Código de País y Número de WhatsApp *</label>
+          <div class="phone-split">
+            <select id="cliCodigoPais" aria-label="Código de país"></select>
+            <input type="tel" id="cliTelefono" required pattern="[0-9\s\-]{6,15}" placeholder="Ej. 4241913036" />
+          </div>
+        </div>
+        <div class="admin-grid-2">
+          <div class="field">
+            <label>Modalidad de Entrega *</label>
+            <select id="cliEntrega" required>
+              <option value="Entrega en Candelaria - Panadería San Bernardino Bakery">Entrega en Candelaria - Panadería San Bernardino Bakery</option>
+              <option value="Envío nacional">Envío nacional</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Método de Pago *</label>
+            <select id="cliPago" required onchange="renderModalCarrito()">
+              <option value="Pago Móvil">Pago Móvil</option>
+              <option value="Divisas">Divisas</option>
+              <option value="PayPal">PayPal</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="width: 100%; padding: 12px;" type="submit" id="btnConfirmarPedido">
+          Confirmar y Reservar Pedido
+        </button>
+        <div class="status-msg" id="msgPedido"></div>
+      </form>
+    </div>
   </div>
-</div>
 
-<!-- Modal Carrito -->
-<div class="modal" id="cart-modal" onclick="this.classList.remove('open')">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <h3>Tu Carrito</h3>
-    <div id="cart-items" style="margin: 12px 0;"></div>
-    <p id="cart-total" style="font-weight:700;"></p>
-    <button class="wa-btn" onclick="sendWhatsApp()">Enviar pedido por WhatsApp</button>
+  <div class="modal-backdrop" id="modalPin">
+    <div class="modal-box" style="max-width: 380px;">
+      <div class="modal-head">
+        <h3>Acceso Administradora</h3>
+        <button class="btn btn-soft" type="button" onclick="cerrarModal('modalPin')">✕</button>
+      </div>
+      <form onsubmit="loginAdmin(event)">
+        <div class="field">
+          <label>PIN de Seguridad</label>
+          <input type="password" id="adminPinInput" required placeholder="Ingresa tu PIN" />
+        </div>
+        <button class="btn btn-primary" style="width: 100%;" type="submit">Entrar al Panel</button>
+        <div class="status-msg" id="msgPin"></div>
+      </form>
+    </div>
   </div>
-</div>
 
-<script>
-  const SCRIPT_URL = "TU_URL_DE_APPS_SCRIPT";
-  const WHATSAPP_NUMBER = "584242855733";
-  let products = [];
-  let bcvRate = 0;
-  let selectedCat = "Todos";
-  let cart = [];
+  <div class="modal-backdrop" id="modalAdmin">
+    <div class="modal-box wide">
+      <div class="modal-head">
+        <h3>Panel Administrativo — Pao's World</h3>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-soft" type="button" onclick="toggleEstadoTiendaAdmin()" id="btnEstadoTienda">Estado: ACTIVO</button>
+          <button class="btn btn-danger" type="button" onclick="cerrarModal('modalAdmin')">Cerrar</button>
+        </div>
+      </div>
 
-  async function loadCatalog() {
-    try {
-      const res = await fetch(SCRIPT_URL);
-      const data = await res.json();
-      bcvRate = Number(data.bcv || 0);
-      products = data.productos || [];
-      document.getElementById("bcv-badge").textContent = bcvRate ? `BCV: Bs. ${bcvRate.toFixed(2)}` : "BCV: N/D";
-      renderCategories();
-      renderProducts();
-    } catch (e) {
-      document.getElementById("grid").innerHTML = "<p>Configura tu URL de Google Apps Script para cargar el catálogo.</p>";
-    }
-  }
+      <div class="admin-tabs">
+        <button class="btn btn-primary" type="button" onclick="cambiarTabAdmin('tabTasa', this)">Tasa BCV y Ajustes</button>
+        <button class="btn btn-soft" type="button" onclick="cambiarTabAdmin('tabProductos', this)">Productos (168+)</button>
+        <button class="btn btn-soft" type="button" onclick="cambiarTabAdmin('tabPedidos', this)">Pedidos</button>
+        <button class="btn btn-soft" type="button" onclick="cambiarTabAdmin('tabMovs', this)">Movimientos DEBE/HABER</button>
+      </div>
 
-  function renderCategories() {
-    const cats = ["Todos", ...new Set(products.map(p => p.categoria).filter(Boolean))];
-    const container = document.getElementById("categories");
-    container.innerHTML = cats.map(c =>
-      `<button class="cat-btn ${c === selectedCat ? 'active' : ''}" onclick="setCategory('${c}')">${c}</button>`
-    ).join("");
-  }
+      <div class="admin-panel active" id="tabTasa">
+        <div class="admin-grid-2">
+          <div class="field">
+            <label>Tasa BCV Manual (Bs por $1) *</label>
+            <input type="number" step="0.01" min="0.01" id="cfgTasaBcv" />
+            <small style="color: var(--texto-suave);" id="cfgUltimaAct"></small>
+          </div>
+          <div class="field">
+            <label>Horas expiración carrito</label>
+            <input type="number" step="0.5" min="0.5" id="cfgHorasExp" />
+          </div>
+          <div class="field">
+            <label>Nombre de la Tienda</label>
+            <input type="text" id="cfgNombreTienda" />
+          </div>
+          <div class="field">
+            <label>WhatsApp (ej. 584242855733)</label>
+            <input type="text" id="cfgWhatsapp" />
+          </div>
+          <div class="field">
+            <label>Subir Logo (se guarda en Google Drive)</label>
+            <input type="file" accept="image/*" onchange="subirArchivoConfig(this, 'logo_url')" />
+            <input type="text" id="cfgLogoUrl" placeholder="URL del logo" style="margin-top: 6px;" />
+          </div>
+          <div class="field">
+            <label>Subir Portada (se guarda en Google Drive)</label>
+            <input type="file" accept="image/*" onchange="subirArchivoConfig(this, 'portada_url')" />
+            <input type="text" id="cfgPortadaUrl" placeholder="URL de portada" style="margin-top: 6px;" />
+          </div>
+        </div>
+        <button class="btn btn-primary" type="button" onclick="guardarConfigAdmin()">Guardar Tasa y Configuración</button>
+        <div class="status-msg" id="msgAdminCfg"></div>
+      </div>
 
-  function setCategory(cat) {
-    selectedCat = cat;
-    renderCategories();
-    renderProducts();
-  }
+      <div class="admin-panel" id="tabProductos">
+        <div class="admin-grid-2" style="margin-bottom: 14px; background: #FAF9FE; padding: 12px; border-radius: 12px; border: 1px solid var(--borde);">
+          <div class="field"><label>ID (vacío para crear nuevo)</label><input type="text" id="prodId" placeholder="Ej. maquillaje1 o vacío" /></div>
+          <div class="field"><label>Categoría</label><select id="prodCategoria"></select></div>
+          <div class="field"><label>Nombre del Producto *</label><input type="text" id="prodNombre" /></div>
+          <div class="field"><label>Detalle / Variante</label><input type="text" id="prodDetalle" /></div>
+          <div class="field"><label>Precio BCV (USD) *</label><input type="number" step="0.01" id="prodPrecioUsd" /></div>
+          <div class="field"><label>Precio Promo Divisas (opcional)</label><input type="number" step="0.01" id="prodPromoUsd" /></div>
+          <div class="field"><label>Stock</label><input type="number" step="1" id="prodStock" value="5" /></div>
+          <div class="field">
+            <label>Foto del Producto (Drive)</label>
+            <input type="file" accept="image/*" onchange="subirFotoProducto(this)" />
+            <input type="text" id="prodImagenUrl" placeholder="URL de imagen" style="margin-top: 6px;" />
+          </div>
+          <div class="field">
+            <label>Activo</label>
+            <select id="prodActivo"><option value="SI">SI</option><option value="NO">NO</option></select>
+          </div>
+          <div style="display: flex; align-items: flex-end; gap: 8px; margin-bottom: 12px;">
+            <button class="btn btn-primary" type="button" onclick="guardarProductoAdmin()">Guardar Producto</button>
+            <button class="btn btn-soft" type="button" onclick="limpiarFormProducto()">Limpiar</button>
+          </div>
+        </div>
+        <div class="status-msg" id="msgAdminProd"></div>
 
-  function renderProducts() {
-    const q = document.getElementById("search").value.toLowerCase();
-    const filtered = products.filter(p => {
-      const matchCat = selectedCat === "Todos" || p.categoria === selectedCat;
-      const matchText = (p.nombre || "").toLowerCase().includes(q) || (p.categoria || "").toLowerCase().includes(q);
-      return matchCat && matchText;
+        <div class="table-wrap" style="margin-top: 12px;">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Categoría</th><th>Nombre</th><th>USD</th><th>Promo Div.</th><th>Stock</th><th>Activo</th><th>Acciones</th></tr>
+            </thead>
+            <tbody id="adminProdBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-panel" id="tabPedidos">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Pedido</th><th>Fecha</th><th>Cliente / WhatsApp</th><th>Total USD / Bs</th><th>Detalle</th><th>Estado</th></tr>
+            </thead>
+            <tbody id="adminPedidosBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-panel" id="tabMovs">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Fecha</th><th>Ref</th><th>Producto</th><th>Tipo</th><th>Cant.</th><th>Stock Ant. → Nuevo</th><th>Motivo</th></tr>
+            </thead>
+            <tbody id="adminMovsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbzE1SwPZ_TBqylMvKS207EPIyGeudgNUdWrGmyGKnYNrWmgWAa0uQs_pvOg_1ko5Ezbpw/exec";
+    const CACHE_KEY = "paos_world_catalog_v1";
+
+    const PAISES = [
+      ["58", "+58 (VE)"], ["57", "+57 (CO)"], ["1", "+1 (US/CA)"],
+      ["34", "+34 (ES)"], ["52", "+52 (MX)"], ["54", "+54 (AR)"],
+      ["56", "+56 (CL)"], ["51", "+51 (PE)"], ["593", "+593 (EC)"],
+      ["507", "+507 (PA)"], ["598", "+598 (UY)"], ["595", "+595 (PY)"],
+      ["591", "+591 (BO)"], ["506", "+506 (CR)"], ["502", "+502 (GT)"],
+      ["503", "+503 (SV)"], ["504", "+504 (HN)"], ["505", "+505 (NI)"],
+      ["53", "+53 (CU)"], ["1809", "+1-809 (DO)"], ["44", "+44 (UK)"],
+      ["33", "+33 (FR)"], ["49", "+49 (DE)"], ["39", "+39 (IT)"],
+      ["351", "+351 (PT)"], ["55", "+55 (BR)"]
+    ];
+
+    const PROD_FIELDS = [
+      ["prodId", "id", ""],
+      ["prodCategoria", "categoria", "Otros"],
+      ["prodNombre", "nombre", ""],
+      ["prodDetalle", "detalle_variante", ""],
+      ["prodPrecioUsd", "precio_bcv_usd", 0],
+      ["prodPromoUsd", "precio_promo_divisas", ""],
+      ["prodStock", "stock", 0],
+      ["prodImagenUrl", "imagen_url", ""],
+      ["prodActivo", "activo", "SI"]
+    ];
+
+    let state = {
+      config: {
+        estado_servicio: "ACTIVO",
+        tasa_bcv: 890,
+        bcv_ultima_actualizacion: "",
+        horas_expiracion_carrito: 2,
+        nombre_tienda: "Pao's World",
+        subtitulo_tienda: "The World of Princess • Caracas, Venezuela",
+        whatsapp: "584242855733",
+        instagram: "@paos.world",
+        color_primario: "#A99BE8",
+        color_fondo: "#F4F2FC",
+        color_acento: "#8575D4",
+        logo_url: "",
+        portada_url: ""
+      },
+      categorias: [],
+      productos: [],
+      prodMap: new Map(),
+      categoriaActiva: "TODAS",
+      carrito: [],
+      adminPin: "",
+      adminData: null
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const fmtBs = (val) => (Number(val) || 0).toLocaleString("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      poblarPaises();
+      cargarCatalogo();
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") cerrarModal("modalLightbox");
+      });
     });
 
-    document.getElementById("grid").innerHTML = filtered.map((p, idx) => {
-      const price = Number(p.precio || 0);
-      const bs = bcvRate ? `Bs. ${(price * bcvRate).toFixed(2)}` : "";
-      const stock = Number(p.stock || 0);
-      return `
-        <div class="card">
-          <img src="${p.imagen || ''}" alt="${p.nombre}" onclick="openZoom('${p.imagen || ''}')" />
-          <div class="card-body">
-            <span class="card-cat">${p.categoria || ''}</span>
-            <div class="card-title">${p.nombre}</div>
-            <div class="card-price">$${price.toFixed(2)}</div>
-            <div class="card-bs">${bs}</div>
-            <div class="card-stock">Disponible: ${stock} und</div>
-            <button class="add-btn" ${stock <= 0 ? 'disabled' : ''} onclick="addToCart('${p.nombre.replace(/'/g, "\\'")}', ${price})">
-              ${stock > 0 ? 'Agregar al carrito' : 'Agotado'}
-            </button>
+    function poblarPaises() {
+      $("cliCodigoPais").innerHTML = PAISES.map(([cod, label]) =>
+        `<option value="${cod}" ${cod === "58" ? "selected" : ""}>${label}</option>`
+      ).join("");
+    }
+
+    function aplicarDatosCatalogo(data) {
+      Object.assign(state.config, data.config || {});
+      state.categorias = data.categorias || [];
+      state.productos = data.productos || [];
+      state.prodMap = new Map(state.productos.map(p => [String(p.id), p]));
+      aplicarTemaYMarca();
+      renderCategorias();
+      renderCatalogo();
+      actualizarBadgeCarrito();
+    }
+
+    async function cargarCatalogo() {
+      try {
+        const cached = sessionStorage.getItem(CACHE_KEY);
+        if (cached) {
+          aplicarDatosCatalogo(JSON.parse(cached));
+        }
+      } catch (_) {}
+
+      try {
+        const res = await fetch(`${API_URL}?action=catalog`);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "Error al cargar catálogo");
+        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (_) {}
+        aplicarDatosCatalogo(data);
+      } catch (err) {
+        if (!state.productos.length) {
+          $("gridProductos").innerHTML = `<p style="color: var(--peligro);">No se pudo cargar el catálogo: ${escHtml(err.message)}</p>`;
+        }
+      }
+    }
+
+    function formatearTelefonoVisible(raw) {
+      const digits = String(raw || "").replace(/\D/g, "");
+      if (!digits) return "+58 424-2855733";
+      if (digits.startsWith("58") && digits.length >= 12) {
+        return `+${digits.slice(0, 2)} ${digits.slice(2, 5)}-${digits.slice(5)}`;
+      }
+      return `+${digits}`;
+    }
+
+    function aplicarTemaYMarca() {
+      const c = state.config;
+      const root = document.documentElement.style;
+      root.setProperty("--primario", c.color_primario || "#A99BE8");
+      root.setProperty("--fondo", c.color_fondo || "#F4F2FC");
+      root.setProperty("--acento", c.color_acento || "#8575D4");
+
+      $("brandTitle").textContent = c.nombre_tienda || "Pao's World";
+      $("brandSub").textContent = c.subtitulo_tienda || "The World of Princess • Caracas, Venezuela";
+      document.title = `${c.nombre_tienda || "Pao's World"} — Catálogo Oficial`;
+
+      const igHandle = String(c.instagram || "@paos.world").trim();
+      const igUser = igHandle.replace(/^@/, "") || "paos.world";
+      const igUrl = `https://www.instagram.com/${encodeURIComponent(igUser)}/`;
+      $("headerInstagram").href = igUrl;
+      $("fabInstagram").href = igUrl;
+      $("headerIgText").textContent = igHandle.startsWith("@") ? igHandle : `@${igHandle}`;
+
+      const waNum = String(c.whatsapp || "584242855733").replace(/\D/g, "") || "584242855733";
+      const waUrl = `https://wa.me/${waNum}`;
+      $("headerWhatsApp").href = waUrl;
+      $("fabWhatsApp").href = waUrl;
+      $("headerWaText").textContent = formatearTelefonoVisible(waNum);
+
+      $("tasaPill").textContent = `BCV: Bs. ${fmtBs(c.tasa_bcv || 890)}`;
+      $("bannerPausa").style.display = String(c.estado_servicio).toUpperCase() === "ACTIVO" ? "none" : "block";
+
+      $("brandLogo").innerHTML = c.logo_url
+        ? `<img src="${escAttr(c.logo_url)}" alt="Logo Pao's World" />`
+        : "PW";
+
+      const portadaBox = $("portadaBox");
+      if (c.portada_url) {
+        $("portadaImg").src = c.portada_url;
+        portadaBox.style.display = "block";
+      } else {
+        portadaBox.style.display = "none";
+      }
+    }
+
+    function renderCategorias() {
+      const chips = [`<button class="cat-chip ${state.categoriaActiva === "TODAS" ? "active" : ""}" onclick="seleccionarCategoria('TODAS')">Todas (${state.productos.length})</button>`];
+      for (const cat of state.categorias) {
+        const active = state.categoriaActiva === cat.categoria ? "active" : "";
+        chips.push(`<button class="cat-chip ${active}" onclick="seleccionarCategoria('${escAttr(cat.categoria)}')">${escHtml(cat.categoria)}</button>`);
+      }
+      $("catsRow").innerHTML = chips.join("");
+    }
+
+    function seleccionarCategoria(cat) {
+      state.categoriaActiva = cat;
+      renderCategorias();
+      renderCatalogo();
+    }
+
+    function renderCatalogo() {
+      const q = ($("searchInput").value || "").trim().toLowerCase();
+      const tasa = parseFloat(state.config.tasa_bcv) || 890;
+
+      const filtrados = state.productos.filter(p => {
+        const matchCat = state.categoriaActiva === "TODAS" || p.categoria === state.categoriaActiva;
+        const matchQ = !q || `${p.nombre} ${p.detalle_variante} ${p.categoria}`.toLowerCase().includes(q);
+        return matchCat && matchQ;
+      });
+
+      const grid = $("gridProductos");
+      if (!filtrados.length) {
+        grid.innerHTML = `<p style="color: var(--texto-suave);">No se encontraron productos con ese filtro.</p>`;
+        return;
+      }
+
+      grid.innerHTML = filtrados.map(p => {
+        const precioUsd = Number(p.precio_bcv_usd) || 0;
+        const promoNum = parseFloat(p.precio_promo_divisas);
+        const tienePromo = !isNaN(promoNum) && promoNum > 0;
+        const stock = Number(p.stock) || 0;
+        const sinStock = stock <= 0;
+        const promoHtml = tienePromo ? `<div class="price-promo">Promo divisas: $${promoNum.toFixed(2)}</div>` : "";
+        const tieneFoto = Boolean(p.imagen_url);
+        const imgHtml = tieneFoto
+          ? `<img src="${escAttr(p.imagen_url)}" alt="${escAttr(p.nombre)}" loading="lazy" decoding="async" />`
+          : `<span style="font-size: 28px; font-weight: 800; color: var(--acento); opacity: 0.45;">${escHtml(p.categoria.slice(0, 2).toUpperCase())}</span>`;
+        const clickAttrs = tieneFoto
+          ? `class="card-img clickable" onclick="abrirLightbox('${escAttr(p.id)}')" title="Ver foto ampliada"`
+          : `class="card-img"`;
+
+        return `
+          <article class="card">
+            <div ${clickAttrs}>
+              ${imgHtml}
+              <span class="card-badge">${escHtml(p.categoria)}</span>
+            </div>
+            <div class="card-body">
+              <div class="card-title">${escHtml(p.nombre)}</div>
+              <div class="card-var">${escHtml(p.detalle_variante || "")}</div>
+              <div class="price-box">
+                <div class="price-usd">$${precioUsd.toFixed(2)}</div>
+                <div class="price-bs">Bs. ${fmtBs(precioUsd * tasa)}</div>
+                ${promoHtml}
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="stock-txt ${sinStock ? "stock-out" : ""}">
+                ${sinStock ? "Agotado por ahora" : `Disponible: ${stock} und.`}
+              </div>
+              <button class="btn btn-primary" style="width: 100%;" type="button" ${sinStock ? "disabled" : ""} onclick="agregarAlCarrito('${escAttr(p.id)}')">
+                ${sinStock ? "Sin stock" : "Agregar al carrito"}
+              </button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function abrirLightbox(prodId) {
+      const prod = state.prodMap.get(String(prodId));
+      if (!prod || !prod.imagen_url) return;
+
+      const tasa = parseFloat(state.config.tasa_bcv) || 890;
+      const precioUsd = Number(prod.precio_bcv_usd) || 0;
+      const stock = Number(prod.stock) || 0;
+
+      $("lbTitulo").textContent = prod.nombre || "";
+      $("lbDetalle").textContent = [prod.categoria, prod.detalle_variante].filter(Boolean).join(" • ");
+      $("lbImg").src = prod.imagen_url;
+      $("lbImg").alt = prod.nombre || "Producto";
+      $("lbPrecioUsd").textContent = `$${precioUsd.toFixed(2)}`;
+      $("lbPrecioBs").textContent = `Bs. ${fmtBs(precioUsd * tasa)}`;
+
+      const btnAdd = $("lbBtnAgregar");
+      btnAdd.disabled = stock <= 0;
+      btnAdd.textContent = stock <= 0 ? "Sin stock" : "Agregar al carrito";
+      btnAdd.onclick = () => {
+        agregarAlCarrito(prod.id);
+        cerrarModal("modalLightbox");
+      };
+      $("modalLightbox").classList.add("open");
+    }
+
+    function cerrarLightboxBackdrop(ev) {
+      if (ev.target && ev.target.id === "modalLightbox") cerrarModal("modalLightbox");
+    }
+
+    function precioUnitarioSegunPago(item, metodoPago) {
+      const base = Number(item.precio_usd) || 0;
+      const promo = parseFloat(item.promo_divisas);
+      if (String(metodoPago || "").toLowerCase() === "divisas" && !isNaN(promo) && promo > 0) {
+        return promo;
+      }
+      return base;
+    }
+
+    function calcularTotalesCarrito(metodoPago) {
+      let totalUsd = 0;
+      let totalUnidades = 0;
+      let ahorroPromo = 0;
+
+      for (const it of state.carrito) {
+        const base = Number(it.precio_usd) || 0;
+        const unit = precioUnitarioSegunPago(it, metodoPago);
+        totalUnidades += it.cantidad;
+        totalUsd += it.cantidad * unit;
+        if (unit < base) ahorroPromo += it.cantidad * (base - unit);
+      }
+
+      return { totalUsd, totalUnidades, ahorroPromo };
+    }
+
+    function agregarAlCarrito(prodId) {
+      const prod = state.prodMap.get(String(prodId));
+      const stock = Number(prod?.stock) || 0;
+      if (!prod || stock <= 0) return;
+
+      const existente = state.carrito.find(x => String(x.id) === String(prodId));
+      if (existente) {
+        if (existente.cantidad + 1 > stock) {
+          alert(`Solo quedan ${stock} unidades disponibles de "${prod.nombre}".`);
+          return;
+        }
+        existente.cantidad += 1;
+      } else {
+        const promoNum = parseFloat(prod.precio_promo_divisas);
+        state.carrito.push({
+          id: prod.id,
+          nombre: prod.nombre,
+          precio_usd: Number(prod.precio_bcv_usd) || 0,
+          promo_divisas: !isNaN(promoNum) && promoNum > 0 ? promoNum : null,
+          cantidad: 1,
+          maxStock: stock
+        });
+      }
+      actualizarBadgeCarrito();
+    }
+
+    function cambiarCantidadCarrito(prodId, delta) {
+      const idx = state.carrito.findIndex(x => String(x.id) === String(prodId));
+      if (idx === -1) return;
+      const item = state.carrito[idx];
+      const nuevaCant = item.cantidad + delta;
+      if (nuevaCant <= 0) state.carrito.splice(idx, 1);
+      else if (nuevaCant <= item.maxStock) item.cantidad = nuevaCant;
+      actualizarBadgeCarrito();
+      renderModalCarrito();
+    }
+
+    function actualizarBadgeCarrito() {
+      const metodoActual = $("cliPago")?.value || "Pago Móvil";
+      const { totalUsd, totalUnidades } = calcularTotalesCarrito(metodoActual);
+      $("cartCountBadge").textContent = `(${totalUnidades})`;
+      $("cartTotalUsdBadge").textContent = `$${totalUsd.toFixed(2)}`;
+    }
+
+    function abrirCarrito() {
+      renderModalCarrito();
+      $("modalCarrito").classList.add("open");
+    }
+
+    function renderModalCarrito() {
+      const list = $("cartItemsList");
+      const descBox = $("orderDescriptionBox");
+      const promoNote = $("cartPromoNote");
+      const metodoPago = $("cliPago")?.value || "Pago Móvil";
+      const esPagoMovil = /m[oó]vil/i.test(metodoPago);
+      const tasa = parseFloat(state.config.tasa_bcv) || 890;
+
+      if (!state.carrito.length) {
+        list.innerHTML = `<p style="color: var(--texto-suave); padding: 12px 0;">Tu carrito está vacío.</p>`;
+        promoNote.textContent = "";
+        descBox.innerHTML = "";
+        actualizarBadgeCarrito();
+        return;
+      }
+
+      list.innerHTML = state.carrito.map(it => {
+        const unit = precioUnitarioSegunPago(it, metodoPago);
+        const aplicaPromo = unit < (Number(it.precio_usd) || 0);
+        return `
+          <div class="cart-item">
+            <div>
+              <div style="font-weight: 700;">${escHtml(it.nombre)}</div>
+              <div style="font-size: 12px; color: ${aplicaPromo ? "var(--exito)" : "var(--texto-suave)"}; font-weight: ${aplicaPromo ? "700" : "400"};">
+                $${unit.toFixed(2)} c/u ${aplicaPromo ? `(Promo Divisas • antes $${Number(it.precio_usd).toFixed(2)})` : ""}
+              </div>
+            </div>
+            <div class="qty-controls">
+              <button class="qty-btn" type="button" onclick="cambiarCantidadCarrito('${escAttr(it.id)}', -1)">-</button>
+              <span style="font-weight: 700; min-width: 20px; text-align: center;">${it.cantidad}</span>
+              <button class="qty-btn" type="button" onclick="cambiarCantidadCarrito('${escAttr(it.id)}', 1)">+</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      const { totalUsd, ahorroPromo } = calcularTotalesCarrito(metodoPago);
+      promoNote.textContent = ahorroPromo > 0
+        ? `¡Promoción en Divisas aplicada! Ahorras $${ahorroPromo.toFixed(2)} en este pedido.`
+        : "";
+
+      const detalleItemsHtml = state.carrito.map(it => {
+        const unit = precioUnitarioSegunPago(it, metodoPago);
+        const subUsd = unit * it.cantidad;
+        return `<li>• ${it.cantidad}x ${escHtml(it.nombre)} — $${unit.toFixed(2)} c/u (<b>$${subUsd.toFixed(2)}</b>)</li>`;
+      }).join("");
+
+      const totalBsFmt = fmtBs(totalUsd * tasa);
+      const tasaFmt = fmtBs(tasa);
+      const pagoMovilHtml = esPagoMovil
+        ? `<div class="order-desc-bs">Son $${totalUsd.toFixed(2)} de tu carrito • Total en Bs.: Bs. ${totalBsFmt} (Tasa BCV: Bs. ${tasaFmt})</div>`
+        : "";
+
+      descBox.innerHTML = `
+        <div class="order-desc-box">
+          <div class="order-desc-title">Descripción del pedido</div>
+          <ul class="order-desc-list">${detalleItemsHtml}</ul>
+          <div class="order-desc-total">
+            Total del carrito: $${totalUsd.toFixed(2)} USD
+            ${pagoMovilHtml}
           </div>
         </div>
       `;
-    }).join("");
-  }
 
-  function openZoom(src) {
-    if (!src) return;
-    document.getElementById("zoom-img").src = src;
-    document.getElementById("zoom-modal").classList.add("open");
-  }
+      actualizarBadgeCarrito();
+    }
 
-  function addToCart(name, price) {
-    const existing = cart.find(i => i.name === name);
-    if (existing) existing.qty++;
-    else cart.push({ name, price, qty: 1 });
-    updateCartUI();
-  }
+    function construirTelefonoCompleto(codigoPais, numeroLocal) {
+      const cod = String(codigoPais || "").replace(/\D/g, "");
+      let num = String(numeroLocal || "").replace(/\D/g, "");
+      if (!num) return "";
+      if (cod === "58" && num.startsWith("0")) num = num.slice(1);
+      return `${cod}${num}`;
+    }
 
-  function updateCartUI() {
-    const count = cart.reduce((s, i) => s + i.qty, 0);
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    document.getElementById("cart-btn").textContent = `🛒 Carrito (${count}) - $${total.toFixed(2)}`;
-  }
+    async function enviarPedido(ev) {
+      ev.preventDefault();
+      const msg = $("msgPedido");
+      msg.className = "status-msg";
+      msg.style.display = "none";
 
-  document.getElementById("cart-btn").onclick = () => {
-    const list = document.getElementById("cart-items");
-    list.innerHTML = cart.length
-      ? cart.map((i, idx) => `
-          <div class="cart-item">
-            <span>${i.qty}x ${i.name}</span>
-            <span>$${(i.price * i.qty).toFixed(2)} <button onclick="removeItem(${idx})">✕</button></span>
-          </div>`).join("")
-      : "<p>Tu carrito está vacío.</p>";
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const bsTotal = bcvRate ? ` (Bs. ${(total * bcvRate).toFixed(2)})` : "";
-    document.getElementById("cart-total").textContent = `Total: $${total.toFixed(2)}${bsTotal}`;
-    document.getElementById("cart-modal").classList.add("open");
-  };
+      if (!state.carrito.length) {
+        mostrarMsg(msg, "Agrega al menos un producto al carrito.", false);
+        return;
+      }
 
-  function removeItem(idx) {
-    cart.splice(idx, 1);
-    updateCartUI();
-    document.getElementById("cart-btn").click();
-  }
+      const telefonoCompleto = construirTelefonoCompleto($("cliCodigoPais").value, $("cliTelefono").value.trim());
+      if (!telefonoCompleto || telefonoCompleto.length < 8) {
+        mostrarMsg(msg, "Ingresa un número de WhatsApp válido.", false);
+        return;
+      }
 
-  function sendWhatsApp() {
-    if (!cart.length) return;
-    const lines = cart.map(i => `• ${i.qty}x ${i.name} ($${(i.price * i.qty).toFixed(2)})`).join("\n");
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const msg = encodeURIComponent(`Hola Pao's World 👑, me gustaría hacer este pedido:\n\n${lines}\n\nTotal: $${total.toFixed(2)}`);
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
-  }
+      const metodoPago = $("cliPago").value;
+      const tasa = parseFloat(state.config.tasa_bcv) || 890;
+      const { totalUsd } = calcularTotalesCarrito(metodoPago);
 
-  document.getElementById("search").addEventListener("input", renderProducts);
-  loadCatalog();
-</script>
+      const payload = {
+        action: "createOrder",
+        cliente: $("cliNombre").value.trim(),
+        telefono: `+${telefonoCompleto}`,
+        modalidad_entrega: $("cliEntrega").value,
+        metodo_pago: metodoPago,
+        total_usd: Number(totalUsd.toFixed(2)),
+        total_bs: Number((totalUsd * tasa).toFixed(2)),
+        items: state.carrito.map(it => {
+          const unit = precioUnitarioSegunPago(it, metodoPago);
+          return {
+            id: it.id,
+            nombre: it.nombre,
+            cantidad: it.cantidad,
+            precio_usd: Number(unit.toFixed(2))
+          };
+        })
+      };
+
+      const btn = $("btnConfirmarPedido");
+      btn.disabled = true;
+      btn.textContent = "Registrando pedido...";
+
+      try {
+        const res = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "No se pudo registrar el pedido");
+
+        state.carrito = [];
+        actualizarBadgeCarrito();
+        renderModalCarrito();
+        $("formPedido").reset();
+        $("cliCodigoPais").value = "58";
+        sessionStorage.removeItem(CACHE_KEY);
+        await cargarCatalogo();
+        mostrarMsg(msg, `¡Listo! Tu pedido ${data.pedido_id} fue reservado con éxito. Paola lo revisará desde el panel.`, true);
+      } catch (err) {
+        mostrarMsg(msg, err.message, false);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Confirmar y Reservar Pedido";
+      }
+    }
+
+    const normalizarWhatsAppAdmin = (tel) => String(tel || "").replace(/\D/g, "");
+
+    function abrirModalPin() {
+      $("adminPinInput").value = "";
+      $("msgPin").style.display = "none";
+      $("modalPin").classList.add("open");
+    }
+
+    async function loginAdmin(ev) {
+      ev.preventDefault();
+      const pin = $("adminPinInput").value.trim();
+      const msg = $("msgPin");
+
+      try {
+        const res = await fetch(`${API_URL}?action=adminData&pin=${encodeURIComponent(pin)}`);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "PIN incorrecto");
+
+        state.adminPin = pin;
+        state.adminData = data;
+        cerrarModal("modalPin");
+        poblarPanelAdmin();
+        $("modalAdmin").classList.add("open");
+      } catch (err) {
+        mostrarMsg(msg, err.message, false);
+      }
+    }
+
+    async function refrescarAdminData() {
+      const res = await fetch(`${API_URL}?action=adminData&pin=${encodeURIComponent(state.adminPin)}`);
+      const data = await res.json();
+      if (data.ok) {
+        state.adminData = data;
+        poblarPanelAdmin();
+      }
+      sessionStorage.removeItem(CACHE_KEY);
+      await cargarCatalogo();
+    }
+
+    function limpiarCodigoInternoItem(textoItem) {
+      return String(textoItem || "")
+        .replace(/^\s*\[[^\]]+\]\s*/g, "")
+        .replace(/\s*\[[^\]]+\]\s*/g, " ")
+        .trim();
+    }
+
+    function formatearDetalleParaWhatsApp(detalleRaw) {
+      return String(detalleRaw || "")
+        .split(/\s*(?:\||;|\n)\s*/)
+        .map(s => limpiarCodigoInternoItem(s))
+        .filter(Boolean)
+        .map(s => `- ${s}`)
+        .join("\n");
+    }
+
+    function poblarPanelAdmin() {
+      const d = state.adminData;
+      const cfg = d.config || {};
+      $("cfgTasaBcv").value = cfg.tasa_bcv || "890";
+      $("cfgUltimaAct").textContent = cfg.bcv_ultima_actualizacion
+        ? `Última actualización: ${cfg.bcv_ultima_actualizacion}`
+        : "Sin fecha registrada aún";
+      $("cfgHorasExp").value = cfg.horas_expiracion_carrito || "2";
+      $("cfgNombreTienda").value = cfg.nombre_tienda || "Pao's World";
+      $("cfgWhatsapp").value = cfg.whatsapp || "";
+      $("cfgLogoUrl").value = cfg.logo_url || "";
+      $("cfgPortadaUrl").value = cfg.portada_url || "";
+
+      const est = String(cfg.estado_servicio || "ACTIVO").toUpperCase();
+      $("btnEstadoTienda").textContent = `Estado: ${est}`;
+
+      $("prodCategoria").innerHTML = (d.categorias || [])
+        .map(c => `<option value="${escAttr(c.categoria)}">${escHtml(c.categoria)}</option>`)
+        .join("");
+
+      $("adminProdBody").innerHTML = (d.productos || []).map(p => {
+        const promo = parseFloat(p.precio_promo_divisas);
+        return `
+          <tr>
+            <td><b>${escHtml(p.id)}</b></td>
+            <td>${escHtml(p.categoria)}</td>
+            <td>${escHtml(p.nombre)}</td>
+            <td>$${Number(p.precio_bcv_usd || 0).toFixed(2)}</td>
+            <td>${!isNaN(promo) && promo > 0 ? `$${promo.toFixed(2)}` : "-"}</td>
+            <td>${Number(p.stock || 0)}</td>
+            <td>${escHtml(p.activo)}</td>
+            <td><button class="btn btn-soft" type="button" onclick="editarProductoPorId('${escAttr(p.id)}')">Editar</button></td>
+          </tr>
+        `;
+      }).join("");
+
+      const tasaActual = parseFloat(cfg.tasa_bcv) || 890;
+      const tasaFmt = fmtBs(tasaActual);
+
+      $("adminPedidosBody").innerHTML = (d.pedidos || []).map(ped => {
+        const waCliente = normalizarWhatsAppAdmin(ped.telefono);
+        const totalUsdNum = Number(ped.total_usd || 0);
+        const montoHoyBsFmt = fmtBs(totalUsdNum * tasaActual);
+        const metodoPagoStr = String(ped.metodo_pago || "").trim();
+        const esPagoMovil = /m[oó]vil/i.test(metodoPagoStr);
+        const nombreCliente = String(ped.cliente || "").trim();
+        const tiendaStr = String(cfg.nombre_tienda || "Pao's World").trim();
+        const detalleLineas = formatearDetalleParaWhatsApp(ped.detalle_items);
+
+        const cabecera = [
+          nombreCliente ? `Hola ${nombreCliente}, te escribimos de ${tiendaStr}` : `Te escribimos de ${tiendaStr}`,
+          ped.pedido_id ? `respecto a tu orden ${ped.pedido_id}.` : ".",
+          `Total: $${totalUsdNum.toFixed(2)}`,
+          metodoPagoStr ? `Método de pago: ${metodoPagoStr}.` : "",
+          ped.modalidad_entrega ? `Entrega: ${ped.modalidad_entrega}.` : ""
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .replace(" .", ".");
+
+        const cuerpo = [
+          cabecera,
+          "",
+          "detalle de la orden",
+          detalleLineas,
+          esPagoMovil
+            ? `\nEl monto al día de hoy para Pago Móvil es Bs. ${montoHoyBsFmt} (Tasa BCV: Bs. ${tasaFmt}).`
+            : ""
+        ]
+          .filter(line => line !== undefined)
+          .join("\n")
+          .trim();
+
+        const linkWaHtml = waCliente
+          ? `<br><a class="btn-wa-mini" href="https://wa.me/${waCliente}?text=${encodeURIComponent(cuerpo)}" target="_blank" rel="noopener noreferrer">WhatsApp (+${waCliente})</a>`
+          : "";
+
+        return `
+          <tr>
+            <td><b>${escHtml(ped.pedido_id)}</b></td>
+            <td>${escHtml(ped.fecha)}</td>
+            <td><b>${escHtml(ped.cliente)}</b><br><small>${escHtml(ped.telefono)}</small>${linkWaHtml}</td>
+            <td>$${totalUsdNum.toFixed(2)}<br><small>Bs. ${Number(ped.total_bs || 0).toFixed(2)}</small></td>
+            <td><small>${escHtml(ped.detalle_items)}</small></td>
+            <td>
+              <select onchange="cambiarEstadoPedido('${escAttr(ped.pedido_id)}', this.value)">
+                ${["EN_PROCESO", "APROBADO", "COMPLETADO", "CANCELADO", "VENCIDO_2H"].map(st =>
+                  `<option value="${st}" ${ped.estado === st ? "selected" : ""}>${st}</option>`
+                ).join("")}
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      $("adminMovsBody").innerHTML = (d.movimientos || []).map(m => `
+        <tr>
+          <td>${escHtml(m.fecha)}</td>
+          <td>${escHtml(m.referencia)}</td>
+          <td><b>${escHtml(m.producto_id)}</b></td>
+          <td><b>${escHtml(m.tipo)}</b></td>
+          <td>${escHtml(m.cantidad)}</td>
+          <td>${escHtml(m.stock_anterior)} → ${escHtml(m.stock_nuevo)}</td>
+          <td>${escHtml(m.motivo)}</td>
+        </tr>
+      `).join("");
+    }
+
+    async function postAdmin(payload) {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify(Object.assign({ pin: state.adminPin }, payload))
+      });
+      return res.json();
+    }
+
+    async function guardarConfigAdmin() {
+      const msg = $("msgAdminCfg");
+      const data = await postAdmin({
+        action: "updateConfig",
+        patch: {
+          tasa_bcv: $("cfgTasaBcv").value.trim(),
+          horas_expiracion_carrito: $("cfgHorasExp").value.trim(),
+          nombre_tienda: $("cfgNombreTienda").value.trim(),
+          whatsapp: $("cfgWhatsapp").value.trim(),
+          logo_url: $("cfgLogoUrl").value.trim(),
+          portada_url: $("cfgPortadaUrl").value.trim()
+        }
+      });
+      if (data.ok) {
+        mostrarMsg(msg, "Configuración y tasa BCV guardadas.", true);
+        await refrescarAdminData();
+      } else {
+        mostrarMsg(msg, data.error || "Error al guardar", false);
+      }
+    }
+
+    async function toggleEstadoTiendaAdmin() {
+      const actual = String(state.adminData?.config?.estado_servicio || "ACTIVO").toUpperCase();
+      const data = await postAdmin({ action: "toggleService", estado: actual === "ACTIVO" ? "PAUSADO" : "ACTIVO" });
+      if (data.ok) await refrescarAdminData();
+    }
+
+    function editarProductoPorId(prodId) {
+      const p = (state.adminData?.productos || []).find(x => String(x.id) === String(prodId));
+      if (!p) return;
+      for (const [elId, prop, defVal] of PROD_FIELDS) {
+        $(elId).value = p[prop] ?? defVal;
+      }
+    }
+
+    function limpiarFormProducto() {
+      for (const [elId, , defVal] of PROD_FIELDS) {
+        $(elId).value = defVal;
+      }
+      $("prodStock").value = "5";
+      $("prodActivo").value = "SI";
+    }
+
+    async function guardarProductoAdmin() {
+      const msg = $("msgAdminProd");
+      const data = await postAdmin({
+        action: "saveProduct",
+        product: {
+          id: $("prodId").value.trim(),
+          categoria: $("prodCategoria").value,
+          nombre: $("prodNombre").value.trim(),
+          detalle_variante: $("prodDetalle").value.trim(),
+          precio_bcv_usd: parseFloat($("prodPrecioUsd").value) || 0,
+          precio_promo_divisas: $("prodPromoUsd").value.trim(),
+          stock: parseInt($("prodStock").value, 10) || 0,
+          imagen_url: $("prodImagenUrl").value.trim(),
+          activo: $("prodActivo").value
+        }
+      });
+      if (data.ok) {
+        mostrarMsg(msg, `Producto guardado (${data.id}).`, true);
+        limpiarFormProducto();
+        await refrescarAdminData();
+      } else {
+        mostrarMsg(msg, data.error || "Error al guardar producto", false);
+      }
+    }
+
+    async function cambiarEstadoPedido(pedidoId, nuevoEstado) {
+      const data = await postAdmin({ action: "updateOrderStatus", pedido_id: pedidoId, estado: nuevoEstado });
+      if (data.ok) await refrescarAdminData();
+    }
+
+    async function subirArchivoConfig(input, campoDestino) {
+      const file = input.files?.[0];
+      if (!file) return;
+      const url = await subirBase64Drive(file);
+      if (url) $(campoDestino === "logo_url" ? "cfgLogoUrl" : "cfgPortadaUrl").value = url;
+    }
+
+    async function subirFotoProducto(input) {
+      const file = input.files?.[0];
+      if (!file) return;
+      const url = await subirBase64Drive(file);
+      if (url) $("prodImagenUrl").value = url;
+    }
+
+    function subirBase64Drive(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const base64 = String(reader.result).split(",")[1] || "";
+          const data = await postAdmin({
+            action: "uploadMedia",
+            fileName: file.name,
+            mimeType: file.type || "image/jpeg",
+            base64
+          });
+          resolve(data.ok ? data.url : "");
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function cambiarTabAdmin(tabId, btnEl) {
+      document.querySelectorAll(".admin-panel").forEach(p => p.classList.remove("active"));
+      $(tabId).classList.add("active");
+      document.querySelectorAll(".admin-tabs .btn").forEach(b => {
+        b.classList.remove("btn-primary");
+        b.classList.add("btn-soft");
+      });
+      if (btnEl) {
+        btnEl.classList.remove("btn-soft");
+        btnEl.classList.add("btn-primary");
+      }
+    }
+
+    function cerrarModal(id) {
+      $(id).classList.remove("open");
+    }
+
+    function mostrarMsg(el, txt, ok) {
+      el.textContent = txt;
+      el.className = `status-msg ${ok ? "ok" : "err"}`;
+      el.style.display = "block";
+    }
+
+    function escHtml(s) {
+      return String(s || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    const escAttr = (s) => escHtml(s).replace(/'/g, "&#39;");
+  </script>
 </body>
 </html>
