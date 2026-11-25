@@ -757,19 +757,13 @@
       const cursor = $("devWatermarkCursor");
       if (!box) return;
 
-      const etapas = [
-        { partes: ["Diseño ", { link: "Kevin Santolo" }, " · Costos bajos · Calidad"], duracion: 1750 },
-        { partes: ["Diseño ", { link: "Kevin Santolo" }, " · Contacta ahora"], duracion: 1650 },
-        { partes: ["Diseño  ", { link: "Kevin Santolo" }], duracion: 0 }
-      ];
-
       function renderTextoPlano(str) {
         box.textContent = str;
       }
 
       function renderFinalConEnlace() {
         box.textContent = "";
-        box.appendChild(document.createTextNode("Diseño "));
+        box.appendChild(document.createTextNode("Diseño · "));
         const a = document.createElement("a");
         a.href = DEV_WA_URL;
         a.target = "_blank";
