@@ -276,6 +276,13 @@
     .prod-row-hidden { opacity: 0.72; background: #FAF9FE; }
     .prod-actions-cell { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 
+    .mov-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-weight: 800; padding: 3px 8px; border-radius: 999px; font-size: 12px;
+    }
+    .mov-in { color: var(--exito); background: #E7F7EF; }
+    .mov-out { color: var(--peligro); background: #FDECEF; }
+
     .table-wrap { overflow-x: auto; border: 1px solid var(--borde); border-radius: 12px; }
     table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
     th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--borde); }
@@ -1220,6 +1227,33 @@
       filtrarPedidosAdmin();
     }
 
+    function renderMovimientoBadge(m) {
+      const tipoStr = String(m.tipo || "").trim().toUpperCase();
+      const refStr = String(m.referencia || "").trim().toUpperCase();
+      const motivoStr = String(m.motivo || "").trim().toLowerCase();
+      const stockAnt = Number(m.stock_anterior);
+      const stockNuevo = Number(m.stock_nuevo);
+
+      let esAumento = null;
+      if (tipoStr === "DEBE") esAumento = true;
+      else if (tipoStr === "HABER") esAumento = false;
+      else if (!isNaN(stockAnt) && !isNaN(stockNuevo) && stockAnt !== stockNuevo) {
+        esAumento = stockNuevo > stockAnt;
+      } else if (refStr.startsWith("PED-") || motivoStr.includes("venta") || motivoStr.includes("reserva")) {
+        esAumento = false;
+      } else if (refStr.startsWith("ALTA") || motivoStr.includes("aumento") || motivoStr.includes("inventario inicial")) {
+        esAumento = true;
+      }
+
+      if (esAumento === true) {
+        return `<span class="mov-badge mov-in"><span aria-hidden="true">←</span><span>${escHtml(m.tipo || "DEBE")}</span></span>`;
+      }
+      if (esAumento === false) {
+        return `<span class="mov-badge mov-out"><span>${escHtml(m.tipo || "HABER")}</span><span aria-hidden="true">→</span></span>`;
+      }
+      return `<b>${escHtml(m.tipo || "")}</b>`;
+    }
+
     function renderTablaPedidosAdmin(pedidos, cfg) {
       const todos = Array.isArray(pedidos) ? pedidos : [];
       const q = obtenerFiltroPedidos();
@@ -1613,7 +1647,7 @@
           <td>${escHtml(m.fecha)}</td>
           <td>${escHtml(m.referencia)}</td>
           <td><b>${escHtml(m.producto_id)}</b></td>
-          <td><b>${escHtml(m.tipo)}</b></td>
+          <td>${renderMovimientoBadge(m)}</td>
           <td>${escHtml(m.cantidad)}</td>
           <td>${escHtml(m.stock_anterior)} → ${escHtml(m.stock_nuevo)}</td>
           <td>${escHtml(m.motivo)}</td>
