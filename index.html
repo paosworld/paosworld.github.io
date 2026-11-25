@@ -36,7 +36,8 @@
       display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; overflow: hidden; flex-shrink: 0;
     }
     .brand-logo img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 8px; }
-    .brand-title { font-size: 19px; font-weight: 800; letter-spacing: 0.2px; }
+    .brand-title { font-size: 19px; font-weight: 800; letter-spacing: 0.2px; cursor: pointer; }
+    .brand-title:hover { text-decoration: underline; text-underline-offset: 3px; }
     .brand-sub { font-size: 12px; opacity: 0.92; }
 
     .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -280,7 +281,7 @@
       <div class="brand">
         <div class="brand-logo" id="brandLogo">PW</div>
         <div>
-          <div class="brand-title" id="brandTitle">Pao's World</div>
+          <div class="brand-title" id="brandTitle" role="button" tabindex="0" title="Acceso administradora" onclick="abrirModalPin()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirModalPin();}">Pao's World</div>
           <div class="brand-sub" id="brandSub">The World of Princess • Caracas, Venezuela</div>
         </div>
       </div>
@@ -295,7 +296,6 @@
           <span id="headerWaText">+58 424-2855733</span>
         </a>
         <div class="top-pill" id="tasaPill">BCV: Bs. 890,00</div>
-        <button class="btn btn-white" type="button" onclick="abrirModalPin()">Admin</button>
       </div>
     </div>
   </header>
@@ -491,7 +491,7 @@
           <div class="cat-manager-head">
             <div class="cat-manager-title">Categorías del Catálogo (Crear y Ordenar ↑ / ↓)</div>
             <div class="cat-create-row">
-              <input type="text" id="nuevaCategoriaInput" placeholder="Nueva categoría (ej. Labiales, Brochas...)" onkeydown="if(event.key==='Enter'){event.preventDefault();crearCategoriaAdmin();}" />
+              <input type="text" id="nuevaCategoriaInput" placeholder="Nueva categoría (ej. Manos, Labiales, Brochas...)" onkeydown="if(event.key==='Enter'){event.preventDefault();crearCategoriaAdmin();}" />
               <button class="btn btn-primary btn-sm" type="button" id="btnCrearCategoria" onclick="crearCategoriaAdmin()">+ Crear</button>
             </div>
           </div>
@@ -1152,15 +1152,17 @@
           categoria: categoria,
           direction: direction
         });
-        if (!data.ok) {
-          mostrarMsg(msg, data.error || "No se pudo cambiar el orden.", false);
+        if (!data || !data.ok) {
+          mostrarMsg(msg, (data && data.error) || "No se pudo cambiar el orden de la categoría.", false);
           return;
         }
         mostrarMsg(
           msg,
-          direction === "up"
-            ? `"${categoria}" ascendió en el orden.`
-            : `"${categoria}" descendió en el orden.`,
+          data.moved === false
+            ? `"${categoria}" ya está en el límite del orden.`
+            : direction === "up"
+              ? `"${categoria}" ascendió en el orden.`
+              : `"${categoria}" descendió en el orden.`,
           true
         );
         await refrescarAdminData();
