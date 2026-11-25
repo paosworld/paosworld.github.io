@@ -163,7 +163,7 @@
       background: var(--blanco); border-radius: 18px; width: 100%; max-width: 540px;
       max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 18px 40px rgba(25, 18, 52, 0.25);
     }
-    .modal-box.wide { max-width: 980px; }
+    .modal-box.wide { max-width: 1020px; }
     .lightbox-box { max-width: 680px; text-align: center; }
     .lightbox-img-wrap { width: 100%; background: #F6F4FD; border-radius: 14px; overflow: hidden; margin-bottom: 14px; border: 1px solid var(--borde); }
     .lightbox-img-wrap img { width: 100%; max-height: 65vh; object-fit: cover; display: block; }
@@ -267,6 +267,8 @@
       background: #FFF3CD; color: #6B4E00; border: 1px solid #F2D388;
     }
     .cat-order-actions { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+    .prod-row-hidden { opacity: 0.72; background: #FAF9FE; }
+    .prod-actions-cell { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 
     .table-wrap { overflow-x: auto; border: 1px solid var(--borde); border-radius: 12px; }
     table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
@@ -475,7 +477,7 @@
 
       <div class="admin-tabs">
         <button class="btn btn-primary" type="button" onclick="cambiarTabAdmin('tabTasa', this)">Tasa BCV y Ajustes</button>
-        <button class="btn btn-soft" type="button" onclick="cambiarTabAdmin('tabProductos', this)">Productos (168+)</button>
+        <button class="btn btn-soft" type="button" id="btnTabProductos" onclick="cambiarTabAdmin('tabProductos', this)">Productos (<span id="adminProdCountTab">0</span>)</button>
         <button class="btn btn-soft" type="button" onclick="cambiarTabAdmin('tabPedidos', this)">Pedidos</button>
         <button class="btn btn-soft" type="button" onclick="cambiarTabAdmin('tabMovs', this)">Movimientos DEBE/HABER</button>
       </div>
@@ -546,10 +548,6 @@
             <input type="file" accept="image/*" onchange="subirFotoProducto(this)" />
             <input type="text" id="prodImagenUrl" placeholder="URL de imagen" style="margin-top: 6px;" />
           </div>
-          <div class="field">
-            <label>Activo</label>
-            <select id="prodActivo"><option value="SI">SI</option><option value="NO">NO</option></select>
-          </div>
           <div style="display: flex; align-items: flex-end; gap: 8px; margin-bottom: 12px;">
             <button class="btn btn-primary" type="button" onclick="guardarProductoAdmin()">Guardar Producto</button>
             <button class="btn btn-soft" type="button" onclick="limpiarFormProducto()">Limpiar</button>
@@ -560,7 +558,7 @@
         <div class="table-wrap" style="margin-top: 12px;">
           <table>
             <thead>
-              <tr><th>ID</th><th>Categoría</th><th>Nombre</th><th>USD</th><th>Promo Div.</th><th>Stock</th><th>Activo</th><th>Acciones</th></tr>
+              <tr><th>ID</th><th>Categoría</th><th>Nombre</th><th>USD</th><th>Promo Div.</th><th>Stock</th><th>Acciones</th></tr>
             </thead>
             <tbody id="adminProdBody"></tbody>
           </table>
@@ -615,8 +613,7 @@
       ["prodPrecioUsd", "precio_bcv_usd", 0],
       ["prodPromoUsd", "precio_promo_divisas", ""],
       ["prodStock", "stock", 0],
-      ["prodImagenUrl", "imagen_url", ""],
-      ["prodActivo", "activo", "SI"]
+      ["prodImagenUrl", "imagen_url", ""]
     ];
 
     let state = {
@@ -661,6 +658,23 @@
       ).join("");
     }
 
+    function obtenerCategoriasOcultasSet() {
+      const hidden = new Set();
+      for (const c of (state.categorias || [])) {
+        if (String(c.oculta || "NO").toUpperCase() === "SI") {
+          hidden.add(String(c.categoria || "").trim().toLowerCase());
+        }
+      }
+      if (state.adminData?.categorias) {
+        for (const c of state.adminData.categorias) {
+          if (String(c.oculta || "NO").toUpperCase() === "SI") {
+            hidden.add(String(c.categoria || "").trim().toLowerCase());
+          }
+        }
+      }
+      return hidden;
+    }
+
     function aplicarDatosCatalogo(data) {
       Object.assign(state.config, data.config || {});
       state.categorias = (data.categorias || []).filter(c => String(c.oculta || "NO").toUpperCase() !== "SI");
@@ -673,6 +687,18 @@
       renderCategorias();
       renderCatalogo();
       actualizarBadgeCarrito();
+    }
+
+    function sincronizarCatalogoDesdeAdmin() {
+      if (!state.adminData) return;
+      const catsVisibles = (state.adminData.categorias || []).filter(c => String(c.oculta || "NO").toUpperCase() !== "SI");
+      const prodsActivos = (state.adminData.productos || []).filter(p => String(p.activo || "SI").toUpperCase() === "SI");
+      aplicarDatosCatalogo({
+        config: state.adminData.config || state.config,
+        categorias: catsVisibles,
+        productos: prodsActivos
+      });
+      try { sessionStorage.removeItem(CACHE_KEY); } catch (_) {}
     }
 
     async function cargarCatalogo() {
@@ -746,8 +772,17 @@
     }
 
     function renderCategorias() {
-      const chips = [`<button class="cat-chip ${state.categoriaActiva === "TODAS" ? "active" : ""}" onclick="seleccionarCategoria('TODAS')">Todas (${state.productos.length})</button>`];
-      for (const cat of state.categorias) {
+      const hiddenSet = obtenerCategoriasOcultasSet();
+      const catsVisibles = (state.categorias || []).filter(c =>
+        String(c.oculta || "NO").toUpperCase() !== "SI" &&
+        !hiddenSet.has(String(c.categoria || "").trim().toLowerCase())
+      );
+      const prodsVisibles = (state.productos || []).filter(p =>
+        !hiddenSet.has(String(p.categoria || "").trim().toLowerCase())
+      );
+
+      const chips = [`<button class="cat-chip ${state.categoriaActiva === "TODAS" ? "active" : ""}" onclick="seleccionarCategoria('TODAS')">Todas (${prodsVisibles.length})</button>`];
+      for (const cat of catsVisibles) {
         const active = state.categoriaActiva === cat.categoria ? "active" : "";
         chips.push(`<button class="cat-chip ${active}" onclick="seleccionarCategoria('${escAttr(cat.categoria)}')">${escHtml(cat.categoria)}</button>`);
       }
@@ -763,8 +798,11 @@
     function renderCatalogo() {
       const q = ($("searchInput").value || "").trim().toLowerCase();
       const tasa = parseFloat(state.config.tasa_bcv) || 890;
+      const hiddenSet = obtenerCategoriasOcultasSet();
 
       const filtrados = state.productos.filter(p => {
+        const catLower = String(p.categoria || "").trim().toLowerCase();
+        if (hiddenSet.has(catLower)) return false;
         const matchCat = state.categoriaActiva === "TODAS" || p.categoria === state.categoriaActiva;
         const matchQ = !q || `${p.nombre} ${p.detalle_variante} ${p.categoria}`.toLowerCase().includes(q);
         return matchCat && matchQ;
@@ -1121,11 +1159,27 @@
       return String($("adminSearchInput")?.value || "").trim().toLowerCase();
     }
 
+    function actualizarContadorProductosTab() {
+      const total = Array.isArray(state.adminData?.productos) ? state.adminData.productos.length : 0;
+      const q = obtenerFiltroAdmin();
+      if ($("adminProdCountTab")) {
+        $("adminProdCountTab").textContent = q ? `${total} • ${filtrarListaProductosAdmin(state.adminData?.productos || []).length}` : String(total);
+      }
+    }
+
+    function filtrarListaProductosAdmin(productos) {
+      const lista = Array.isArray(productos) ? productos : [];
+      const q = obtenerFiltroAdmin();
+      if (!q) return lista;
+      return lista.filter(p => `${p.id} ${p.categoria} ${p.nombre} ${p.detalle_variante || ""}`.toLowerCase().includes(q));
+    }
+
     function filtrarAdminCatalogo() {
       const q = obtenerFiltroAdmin();
       if ($("btnLimpiarAdminSearch")) {
         $("btnLimpiarAdminSearch").style.display = q ? "inline-flex" : "none";
       }
+      actualizarContadorProductosTab();
       if (!state.adminData) return;
       renderListaCategoriasAdmin(state.adminData.categorias || []);
       renderTablaProductosAdmin(state.adminData.productos || []);
@@ -1186,29 +1240,41 @@
     }
 
     function renderTablaProductosAdmin(productos) {
-      const lista = Array.isArray(productos) ? productos : [];
-      const q = obtenerFiltroAdmin();
-      const filtrados = q
-        ? lista.filter(p => `${p.id} ${p.categoria} ${p.nombre} ${p.detalle_variante || ""}`.toLowerCase().includes(q))
-        : lista;
+      const todos = Array.isArray(productos) ? productos : [];
+      const filtrados = filtrarListaProductosAdmin(todos);
 
       if (!filtrados.length) {
-        $("adminProdBody").innerHTML = `<tr><td colspan="8" style="color: var(--texto-suave);">No se encontraron productos con ese filtro.</td></tr>`;
+        $("adminProdBody").innerHTML = `<tr><td colspan="7" style="color: var(--texto-suave);">No se encontraron productos con ese filtro.</td></tr>`;
         return;
       }
 
       $("adminProdBody").innerHTML = filtrados.map(p => {
+        const idx = todos.findIndex(item => String(item.id) === String(p.id));
+        const esPrimero = idx <= 0;
+        const esUltimo = idx >= todos.length - 1;
+        const estaOculto = String(p.activo || "SI").toUpperCase() !== "SI";
         const promo = parseFloat(p.precio_promo_divisas);
+        const badgeOculto = estaOculto ? ` <span class="cat-badge-hidden">OCULTO</span>` : "";
+        const eyeIcon = estaOculto ? "#ico-eye" : "#ico-eye-off";
+        const eyeTitle = estaOculto ? "Mostrar producto en catálogo" : "Ocultar producto en catálogo";
+
         return `
-          <tr>
+          <tr class="${estaOculto ? "prod-row-hidden" : ""}">
             <td><b>${escHtml(p.id)}</b></td>
             <td>${escHtml(p.categoria)}</td>
-            <td>${escHtml(p.nombre)}</td>
+            <td>${escHtml(p.nombre)}${badgeOculto}</td>
             <td>$${Number(p.precio_bcv_usd || 0).toFixed(2)}</td>
             <td>${!isNaN(promo) && promo > 0 ? `$${promo.toFixed(2)}` : "-"}</td>
             <td>${Number(p.stock || 0)}</td>
-            <td>${escHtml(p.activo)}</td>
-            <td><button class="btn btn-soft" type="button" onclick="editarProductoPorId('${escAttr(p.id)}')">Editar</button></td>
+            <td>
+              <div class="prod-actions-cell">
+                <button class="btn btn-soft btn-sm" type="button" onclick="editarProductoPorId('${escAttr(p.id)}')">Editar</button>
+                <button class="btn btn-soft btn-sm" type="button" title="Ascender producto" ${esPrimero ? "disabled" : ""} onclick="moverProductoAdmin('${escAttr(p.id)}', 'up')">↑</button>
+                <button class="btn btn-soft btn-sm" type="button" title="Descender producto" ${esUltimo ? "disabled" : ""} onclick="moverProductoAdmin('${escAttr(p.id)}', 'down')">↓</button>
+                <button class="btn btn-soft btn-sm" type="button" title="${eyeTitle}" aria-label="${eyeTitle}" onclick="toggleOcultarProductoAdmin('${escAttr(p.id)}', ${!estaOculto})"><svg width="14" height="14" aria-hidden="true"><use href="${eyeIcon}"></use></svg></button>
+                <button class="btn btn-danger btn-sm" type="button" title="Eliminar producto" aria-label="Eliminar producto" onclick="eliminarProductoAdmin('${escAttr(p.id)}', '${escAttr(p.nombre)}')">✕</button>
+              </div>
+            </td>
           </tr>
         `;
       }).join("");
@@ -1272,14 +1338,27 @@
 
     async function toggleOcultarCategoriaAdmin(categoria, ocultar) {
       const msg = $("msgAdminCat");
+      const nuevoEstado = ocultar ? "SI" : "NO";
+
+      if (state.adminData?.categorias) {
+        state.adminData.categorias = state.adminData.categorias.map(c =>
+          String(c.categoria || "").trim().toLowerCase() === String(categoria || "").trim().toLowerCase()
+            ? Object.assign({}, c, { oculta: nuevoEstado })
+            : c
+        );
+        renderListaCategoriasAdmin(state.adminData.categorias);
+        sincronizarCatalogoDesdeAdmin();
+      }
+
       try {
         const data = await postAdmin({
           action: "toggleCategoryHidden",
           categoria: categoria,
-          oculta: ocultar ? "SI" : "NO"
+          oculta: nuevoEstado
         });
         if (!data || !data.ok) {
           mostrarMsg(msg, (data && data.error) || "No se pudo cambiar la visibilidad de la categoría.", false);
+          await refrescarAdminData();
           return;
         }
         mostrarMsg(
@@ -1292,6 +1371,7 @@
         await refrescarAdminData();
       } catch (err) {
         mostrarMsg(msg, err.message || "Error al actualizar visibilidad.", false);
+        await refrescarAdminData();
       }
     }
 
@@ -1316,6 +1396,81 @@
       }
     }
 
+    async function moverProductoAdmin(prodId, direction) {
+      const msg = $("msgAdminProd");
+      try {
+        const data = await postAdmin({
+          action: "reorderProduct",
+          id: prodId,
+          direction: direction
+        });
+        if (!data || !data.ok) {
+          mostrarMsg(msg, (data && data.error) || "No se pudo cambiar el orden del producto.", false);
+          return;
+        }
+        mostrarMsg(
+          msg,
+          data.moved === false
+            ? `El producto "${prodId}" ya está en el límite del orden.`
+            : direction === "up"
+              ? `Producto "${prodId}" ascendió en el orden.`
+              : `Producto "${prodId}" descendió en el orden.`,
+          true
+        );
+        await refrescarAdminData();
+      } catch (err) {
+        mostrarMsg(msg, err.message || "Error al reordenar producto.", false);
+      }
+    }
+
+    async function toggleOcultarProductoAdmin(prodId, ocultar) {
+      const msg = $("msgAdminProd");
+      const nuevoActivo = ocultar ? "NO" : "SI";
+      try {
+        const data = await postAdmin({
+          action: "toggleProductHidden",
+          id: prodId,
+          activo: nuevoActivo,
+          oculta: ocultar ? "SI" : "NO"
+        });
+        if (!data || !data.ok) {
+          mostrarMsg(msg, (data && data.error) || "No se pudo cambiar la visibilidad del producto.", false);
+          return;
+        }
+        mostrarMsg(
+          msg,
+          ocultar
+            ? `Producto "${prodId}" oculto del catálogo público.`
+            : `Producto "${prodId}" visible nuevamente en el catálogo público.`,
+          true
+        );
+        await refrescarAdminData();
+      } catch (err) {
+        mostrarMsg(msg, err.message || "Error al cambiar visibilidad del producto.", false);
+      }
+    }
+
+    async function eliminarProductoAdmin(prodId, nombreProd) {
+      const msg = $("msgAdminProd");
+      const okConfirm = confirm(`¿Eliminar el producto "${nombreProd || prodId}" (${prodId})?`);
+      if (!okConfirm) return;
+
+      try {
+        const data = await postAdmin({
+          action: "deleteProduct",
+          id: prodId
+        });
+        if (!data || !data.ok) {
+          mostrarMsg(msg, (data && data.error) || "No se pudo eliminar el producto.", false);
+          return;
+        }
+        mostrarMsg(msg, `Producto "${prodId}" eliminado.`, true);
+        await refrescarAdminData();
+      } catch (err) {
+        mostrarMsg(msg, err.message || "Error al eliminar producto.", false);
+      }
+    }
+
     function poblarPanelAdmin() {
       const d = state.adminData;
       const cfg = d.config || {};
@@ -1332,6 +1487,7 @@
       const est = String(cfg.estado_servicio || "ACTIVO").toUpperCase();
       $("btnEstadoTienda").textContent = `Estado: ${est}`;
 
+      actualizarContadorProductosTab();
       renderListaCategoriasAdmin(d.categorias || []);
       renderTablaProductosAdmin(d.productos || []);
 
@@ -1455,15 +1611,19 @@
         $(elId).value = defVal;
       }
       $("prodStock").value = "5";
-      $("prodActivo").value = "SI";
     }
 
     async function guardarProductoAdmin() {
       const msg = $("msgAdminProd");
+      const idActual = $("prodId").value.trim();
+      const prodExistente = idActual
+        ? (state.adminData?.productos || []).find(x => String(x.id) === idActual)
+        : null;
+
       const data = await postAdmin({
         action: "saveProduct",
         product: {
-          id: $("prodId").value.trim(),
+          id: idActual,
           categoria: $("prodCategoria").value,
           nombre: $("prodNombre").value.trim(),
           detalle_variante: $("prodDetalle").value.trim(),
@@ -1471,7 +1631,7 @@
           precio_promo_divisas: $("prodPromoUsd").value.trim(),
           stock: parseInt($("prodStock").value, 10) || 0,
           imagen_url: $("prodImagenUrl").value.trim(),
-          activo: $("prodActivo").value
+          activo: prodExistente ? String(prodExistente.activo || "SI") : "SI"
         }
       });
       if (data.ok) {
