@@ -227,6 +227,16 @@
     .admin-panel { display: none; }
     .admin-panel.active { display: block; }
     .admin-grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .admin-quick-search {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 12px;
+      padding: 8px 12px; margin-bottom: 14px;
+    }
+    .admin-quick-search:focus-within { border-color: var(--acento); }
+    .admin-quick-search input {
+      flex: 1; border: none; outline: none; background: transparent;
+      font-size: 13.5px; color: var(--texto);
+    }
     .cat-manager-box {
       background: #FAF9FE; border: 1px solid var(--borde); border-radius: 12px;
       padding: 12px; margin-bottom: 14px;
@@ -243,15 +253,20 @@
     }
     .cat-order-list {
       display: flex; flex-direction: column; gap: 6px; margin-top: 10px;
-      max-height: 210px; overflow-y: auto;
+      max-height: 220px; overflow-y: auto;
     }
     .cat-order-item {
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
       background: var(--blanco); border: 1px solid var(--borde); border-radius: 9px;
       padding: 6px 10px; font-size: 12.5px;
     }
-    .cat-order-name { font-weight: 700; color: var(--texto); }
-    .cat-order-actions { display: flex; align-items: center; gap: 4px; }
+    .cat-order-item.is-hidden { opacity: 0.72; background: #F8F7FC; }
+    .cat-order-name { font-weight: 700; color: var(--texto); display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+    .cat-badge-hidden {
+      font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 999px;
+      background: #FFF3CD; color: #6B4E00; border: 1px solid #F2D388;
+    }
+    .cat-order-actions { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 
     .table-wrap { overflow-x: auto; border: 1px solid var(--borde); border-radius: 12px; }
     table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
@@ -273,6 +288,19 @@
     </symbol>
     <symbol id="ico-wa" viewBox="0 0 32 32" fill="currentColor">
       <path d="M16 3C8.82 3 3 8.82 3 16c0 2.29.6 4.52 1.73 6.49L3.5 28.5l6.22-1.63A12.93 12.93 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm7.57 18.47c-.32.9-1.85 1.72-2.58 1.83-.67.1-1.52.14-2.45-.16-.56-.18-1.29-.42-2.22-.82-3.91-1.69-6.46-5.63-6.66-5.89-.2-.26-1.59-2.12-1.59-4.04 0-1.92 1.01-2.87 1.37-3.26.36-.39.78-.49 1.04-.49.26 0 .52 0 .75.01.24.01.56-.09.88.67.32.78 1.09 2.66 1.19 2.85.1.19.16.42.03.68-.13.26-.19.42-.39.65-.2.23-.41.51-.59.69-.2.2-.4.41-.17.8.23.39 1.02 1.68 2.19 2.72 1.5 1.34 2.77 1.75 3.16 1.95.39.2.62.16.85-.1.23-.26.98-1.14 1.24-1.53.26-.39.52-.32.88-.19.36.13 2.29 1.08 2.68 1.28.39.2.65.29.75.46.1.16.1.94-.22 1.84z"/>
+    </symbol>
+    <symbol id="ico-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="7"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </symbol>
+    <symbol id="ico-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+      <circle cx="12" cy="12" r="3"></circle>
+    </symbol>
+    <symbol id="ico-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.77 21.77 0 0 1 5.06-6.94"></path>
+      <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.8 21.8 0 0 1-2.16 3.19"></path>
+      <line x1="1" y1="1" x2="23" y2="23"></line>
     </symbol>
   </svg>
 
@@ -487,9 +515,15 @@
       </div>
 
       <div class="admin-panel" id="tabProductos">
+        <div class="admin-quick-search">
+          <svg width="18" height="18" style="color: var(--acento); flex-shrink: 0;" aria-hidden="true"><use href="#ico-search"></use></svg>
+          <input type="search" id="adminSearchInput" placeholder="Buscar rápido categoría o producto (nombre, ID, variante)..." oninput="filtrarAdminCatalogo()" />
+          <button class="btn btn-soft btn-sm" type="button" id="btnLimpiarAdminSearch" onclick="limpiarBusquedaAdmin()" style="display: none;">Limpiar</button>
+        </div>
+
         <div class="cat-manager-box">
           <div class="cat-manager-head">
-            <div class="cat-manager-title">Categorías del Catálogo (Crear y Ordenar ↑ / ↓)</div>
+            <div class="cat-manager-title">Categorías del Catálogo (Crear, Ordenar, Ocultar o Eliminar)</div>
             <div class="cat-create-row">
               <input type="text" id="nuevaCategoriaInput" placeholder="Nueva categoría (ej. Manos, Labiales, Brochas...)" onkeydown="if(event.key==='Enter'){event.preventDefault();crearCategoriaAdmin();}" />
               <button class="btn btn-primary btn-sm" type="button" id="btnCrearCategoria" onclick="crearCategoriaAdmin()">+ Crear</button>
@@ -629,9 +663,12 @@
 
     function aplicarDatosCatalogo(data) {
       Object.assign(state.config, data.config || {});
-      state.categorias = data.categorias || [];
+      state.categorias = (data.categorias || []).filter(c => String(c.oculta || "NO").toUpperCase() !== "SI");
       state.productos = data.productos || [];
       state.prodMap = new Map(state.productos.map(p => [String(p.id), p]));
+      if (state.categoriaActiva !== "TODAS" && !state.categorias.some(c => c.categoria === state.categoriaActiva)) {
+        state.categoriaActiva = "TODAS";
+      }
       aplicarTemaYMarca();
       renderCategorias();
       renderCatalogo();
@@ -1080,37 +1117,99 @@
         .join("\n");
     }
 
+    function obtenerFiltroAdmin() {
+      return String($("adminSearchInput")?.value || "").trim().toLowerCase();
+    }
+
+    function filtrarAdminCatalogo() {
+      const q = obtenerFiltroAdmin();
+      if ($("btnLimpiarAdminSearch")) {
+        $("btnLimpiarAdminSearch").style.display = q ? "inline-flex" : "none";
+      }
+      if (!state.adminData) return;
+      renderListaCategoriasAdmin(state.adminData.categorias || []);
+      renderTablaProductosAdmin(state.adminData.productos || []);
+    }
+
+    function limpiarBusquedaAdmin() {
+      if ($("adminSearchInput")) $("adminSearchInput").value = "";
+      filtrarAdminCatalogo();
+    }
+
     function renderListaCategoriasAdmin(categorias, categoriaSeleccionadaActual) {
-      const cats = Array.isArray(categorias) ? categorias : [];
+      const todasCats = Array.isArray(categorias) ? categorias : [];
       const selectEl = $("prodCategoria");
       if (selectEl) {
         const prevVal = categoriaSeleccionadaActual || selectEl.value;
-        selectEl.innerHTML = cats
+        selectEl.innerHTML = todasCats
           .map(c => `<option value="${escAttr(c.categoria)}">${escHtml(c.categoria)}</option>`)
           .join("");
-        if (prevVal && cats.some(c => c.categoria === prevVal)) {
+        if (prevVal && todasCats.some(c => c.categoria === prevVal)) {
           selectEl.value = prevVal;
         }
       }
 
       const listEl = $("adminCatOrderList");
       if (!listEl) return;
-      if (!cats.length) {
-        listEl.innerHTML = `<p style="color: var(--texto-suave); font-size: 12.5px;">No hay categorías registradas aún.</p>`;
+
+      const q = obtenerFiltroAdmin();
+      const visiblesEnLista = q
+        ? todasCats.filter(c => `${c.categoria} ${c.prefijo_id || ""}`.toLowerCase().includes(q))
+        : todasCats;
+
+      if (!visiblesEnLista.length) {
+        listEl.innerHTML = `<p style="color: var(--texto-suave); font-size: 12.5px;">${q ? "No hay categorías que coincidan con la búsqueda." : "No hay categorías registradas aún."}</p>`;
         return;
       }
 
-      listEl.innerHTML = cats.map((c, idx) => {
-        const esPrimero = idx === 0;
-        const esUltimo = idx === cats.length - 1;
+      listEl.innerHTML = visiblesEnLista.map((c) => {
+        const idx = todasCats.findIndex(item => item.categoria === c.categoria);
+        const esPrimero = idx <= 0;
+        const esUltimo = idx >= todasCats.length - 1;
+        const estaOculta = String(c.oculta || "NO").toUpperCase() === "SI";
+        const badgeOculta = estaOculta ? `<span class="cat-badge-hidden">OCULTA</span>` : "";
+        const eyeIcon = estaOculta ? "#ico-eye" : "#ico-eye-off";
+        const eyeTitle = estaOculta ? "Mostrar categoría en catálogo" : "Ocultar categoría en catálogo";
+
         return `
-          <div class="cat-order-item">
-            <span class="cat-order-name">${idx + 1}. ${escHtml(c.categoria)}</span>
+          <div class="cat-order-item ${estaOculta ? "is-hidden" : ""}">
+            <span class="cat-order-name">${idx + 1}. ${escHtml(c.categoria)} ${badgeOculta}</span>
             <div class="cat-order-actions">
               <button class="btn btn-soft btn-sm" type="button" title="Ascender categoría" ${esPrimero ? "disabled" : ""} onclick="moverCategoriaAdmin('${escAttr(c.categoria)}', 'up')">↑</button>
               <button class="btn btn-soft btn-sm" type="button" title="Descender categoría" ${esUltimo ? "disabled" : ""} onclick="moverCategoriaAdmin('${escAttr(c.categoria)}', 'down')">↓</button>
+              <button class="btn btn-soft btn-sm" type="button" title="${eyeTitle}" aria-label="${eyeTitle}" onclick="toggleOcultarCategoriaAdmin('${escAttr(c.categoria)}', ${!estaOculta})"><svg width="14" height="14" aria-hidden="true"><use href="${eyeIcon}"></use></svg></button>
+              <button class="btn btn-danger btn-sm" type="button" title="Eliminar categoría" aria-label="Eliminar categoría" onclick="eliminarCategoriaAdmin('${escAttr(c.categoria)}')">✕</button>
             </div>
           </div>
+        `;
+      }).join("");
+    }
+
+    function renderTablaProductosAdmin(productos) {
+      const lista = Array.isArray(productos) ? productos : [];
+      const q = obtenerFiltroAdmin();
+      const filtrados = q
+        ? lista.filter(p => `${p.id} ${p.categoria} ${p.nombre} ${p.detalle_variante || ""}`.toLowerCase().includes(q))
+        : lista;
+
+      if (!filtrados.length) {
+        $("adminProdBody").innerHTML = `<tr><td colspan="8" style="color: var(--texto-suave);">No se encontraron productos con ese filtro.</td></tr>`;
+        return;
+      }
+
+      $("adminProdBody").innerHTML = filtrados.map(p => {
+        const promo = parseFloat(p.precio_promo_divisas);
+        return `
+          <tr>
+            <td><b>${escHtml(p.id)}</b></td>
+            <td>${escHtml(p.categoria)}</td>
+            <td>${escHtml(p.nombre)}</td>
+            <td>$${Number(p.precio_bcv_usd || 0).toFixed(2)}</td>
+            <td>${!isNaN(promo) && promo > 0 ? `$${promo.toFixed(2)}` : "-"}</td>
+            <td>${Number(p.stock || 0)}</td>
+            <td>${escHtml(p.activo)}</td>
+            <td><button class="btn btn-soft" type="button" onclick="editarProductoPorId('${escAttr(p.id)}')">Editar</button></td>
+          </tr>
         `;
       }).join("");
     }
@@ -1171,6 +1270,52 @@
       }
     }
 
+    async function toggleOcultarCategoriaAdmin(categoria, ocultar) {
+      const msg = $("msgAdminCat");
+      try {
+        const data = await postAdmin({
+          action: "toggleCategoryHidden",
+          categoria: categoria,
+          oculta: ocultar ? "SI" : "NO"
+        });
+        if (!data || !data.ok) {
+          mostrarMsg(msg, (data && data.error) || "No se pudo cambiar la visibilidad de la categoría.", false);
+          return;
+        }
+        mostrarMsg(
+          msg,
+          ocultar
+            ? `Categoría "${categoria}" oculta en el catálogo público.`
+            : `Categoría "${categoria}" visible nuevamente en el catálogo público.`,
+          true
+        );
+        await refrescarAdminData();
+      } catch (err) {
+        mostrarMsg(msg, err.message || "Error al actualizar visibilidad.", false);
+      }
+    }
+
+    async function eliminarCategoriaAdmin(categoria) {
+      const msg = $("msgAdminCat");
+      const okConfirm = confirm(`¿Eliminar la categoría "${categoria}"?`);
+      if (!okConfirm) return;
+
+      try {
+        const data = await postAdmin({
+          action: "deleteCategory",
+          categoria: categoria
+        });
+        if (!data || !data.ok) {
+          mostrarMsg(msg, (data && data.error) || "No se pudo eliminar la categoría.", false);
+          return;
+        }
+        mostrarMsg(msg, `Categoría "${categoria}" eliminada.`, true);
+        await refrescarAdminData();
+      } catch (err) {
+        mostrarMsg(msg, err.message || "Error al eliminar categoría.", false);
+      }
+    }
+
     function poblarPanelAdmin() {
       const d = state.adminData;
       const cfg = d.config || {};
@@ -1188,22 +1333,7 @@
       $("btnEstadoTienda").textContent = `Estado: ${est}`;
 
       renderListaCategoriasAdmin(d.categorias || []);
-
-      $("adminProdBody").innerHTML = (d.productos || []).map(p => {
-        const promo = parseFloat(p.precio_promo_divisas);
-        return `
-          <tr>
-            <td><b>${escHtml(p.id)}</b></td>
-            <td>${escHtml(p.categoria)}</td>
-            <td>${escHtml(p.nombre)}</td>
-            <td>$${Number(p.precio_bcv_usd || 0).toFixed(2)}</td>
-            <td>${!isNaN(promo) && promo > 0 ? `$${promo.toFixed(2)}` : "-"}</td>
-            <td>${Number(p.stock || 0)}</td>
-            <td>${escHtml(p.activo)}</td>
-            <td><button class="btn btn-soft" type="button" onclick="editarProductoPorId('${escAttr(p.id)}')">Editar</button></td>
-          </tr>
-        `;
-      }).join("");
+      renderTablaProductosAdmin(d.productos || []);
 
       const tasaActual = parseFloat(cfg.tasa_bcv) || 890;
       const tasaFmt = fmtBs(tasaActual);
