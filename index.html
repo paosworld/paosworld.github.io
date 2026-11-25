@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pao's World | The World of Princess</title>
+  <style>
+    :root {
+      --primary: #7c4dff;
+      --primary-dark: #5e35b1;
+      --bg: #f8f6fc;
+      --card: #ffffff;
+      --text: #2d2438;
+      --muted: #6e637d;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 80px; }
+    header {
+      background: linear-gradient(135deg, #651fff, #9575cd);
+      color: white;
+      padding: 20px 16px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(101, 31, 255, 0.2);
+    }
+    header h1 { font-size: 1.8rem; letter-spacing: 0.5px; }
+    header p { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 12px;
+      font-size: 0.85rem;
+    }
+    .badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px 12px;
+      border-radius: 20px;
+      color: white;
+      text-decoration: none;
+    }
+    .info-box {
+      background: var(--card);
+      margin: 14px auto;
+      max-width: 960px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 0.85rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .controls {
+      max-width: 960px;
+      margin: 0 auto 14px;
+      padding: 0 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    input[type="search"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #dcd3eb;
+      border-radius: 10px;
+      font-size: 0.95rem;
+    }
+    .categories {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .cat-btn {
+      background: var(--card);
+      border: 1px solid #dcd3eb;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 0.85rem;
+    }
+    .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .grid {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+    }
+    .card img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      cursor: zoom-in;
+      background: #eee;
+    }
+    .card-body { padding: 10px; flex: 1; display: flex; flex-direction: column; }
+    .card-cat { font-size: 0.7rem; color: var(--primary); font-weight: 700; text-transform: uppercase; }
+    .card-title { font-size: 0.95rem; font-weight: 600; margin: 4px 0; }
+    .card-price { font-size: 1rem; font-weight: 700; color: var(--primary-dark); }
+    .card-bs { font-size: 0.8rem; color: var(--muted); }
+    .card-stock { font-size: 0.75rem; color: var(--muted); margin: 4px 0 8px; }
+    .add-btn {
+      margin-top: auto;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .add-btn:disabled { background: #ccc; cursor: not-allowed; }
+    .cart-float {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(124, 77, 255, 0.4);
+      cursor: pointer;
+      z-index: 100;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 200;
+    }
+    .modal.open { display: flex; }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      max-width: 420px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .modal-content img { width: 100%; border-radius: 10px; }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 0.9rem;
+    }
+    .wa-btn {
+      width: 100%;
+      background: #25D366;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      margin-top: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>👑 Pao's World</h1>
+  <p>THE WORLD OF PRINCESS • Caracas, Venezuela</p>
+  <div class="top-bar">
+    <a class="badge" href="https://instagram.com/paos.world" target="_blank">@paos.world</a>
+    <a class="badge" href="https://wa.me/584242855733" target="_blank">+58 424-2855733</a>
+    <span class="badge" id="bcv-badge">BCV: Cargando...</span>
+  </div>
+</header>
+
+<div class="info-box">
+  <strong>ENTREGAS:</strong> Candelaria – Panadería San Bernardino Bakery • Envío nacional<br />
+  <small>Previo acuerdo • Lunes a Domingo, de 10:00 am a 7:00 pm</small>
+</div>
+
+<div class="controls">
+  <input type="search" id="search" placeholder="Buscar maquillaje, uñas, skincare, papelería..." />
+  <div class="categories" id="categories"></div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<button class="cart-float" id="cart-btn">🛒 Carrito (0) - $0.00</button>
+
+<!-- Modal Zoom -->
+<div class="modal" id="zoom-modal" onclick="this.classList.remove('open')">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <img id="zoom-img" src="" alt="Vista previa" />
+  </div>
+</div>
+
+<!-- Modal Carrito -->
+<div class="modal" id="cart-modal" onclick="this.classList.remove('open')">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <h3>Tu Carrito</h3>
+    <div id="cart-items" style="margin: 12px 0;"></div>
+    <p id="cart-total" style="font-weight:700;"></p>
+    <button class="wa-btn" onclick="sendWhatsApp()">Enviar pedido por WhatsApp</button>
+  </div>
+</div>
+
+<script>
+  const SCRIPT_URL = "TU_URL_DE_APPS_SCRIPT";
+  const WHATSAPP_NUMBER = "584242855733";
+  let products = [];
+  let bcvRate = 0;
+  let selectedCat = "Todos";
+  let cart = [];
+
+  async function loadCatalog() {
+    try {
+      const res = await fetch(SCRIPT_URL);
+      const data = await res.json();
+      bcvRate = Number(data.bcv || 0);
+      products = data.productos || [];
+      document.getElementById("bcv-badge").textContent = bcvRate ? `BCV: Bs. ${bcvRate.toFixed(2)}` : "BCV: N/D";
+      renderCategories();
+      renderProducts();
+    } catch (e) {
+      document.getElementById("grid").innerHTML = "<p>Configura tu URL de Google Apps Script para cargar el catálogo.</p>";
+    }
+  }
+
+  function renderCategories() {
+    const cats = ["Todos", ...new Set(products.map(p => p.categoria).filter(Boolean))];
+    const container = document.getElementById("categories");
+    container.innerHTML = cats.map(c =>
+      `<button class="cat-btn ${c === selectedCat ? 'active' : ''}" onclick="setCategory('${c}')">${c}</button>`
+    ).join("");
+  }
+
+  function setCategory(cat) {
+    selectedCat = cat;
+    renderCategories();
+    renderProducts();
+  }
+
+  function renderProducts() {
+    const q = document.getElementById("search").value.toLowerCase();
+    const filtered = products.filter(p => {
+      const matchCat = selectedCat === "Todos" || p.categoria === selectedCat;
+      const matchText = (p.nombre || "").toLowerCase().includes(q) || (p.categoria || "").toLowerCase().includes(q);
+      return matchCat && matchText;
+    });
+
+    document.getElementById("grid").innerHTML = filtered.map((p, idx) => {
+      const price = Number(p.precio || 0);
+      const bs = bcvRate ? `Bs. ${(price * bcvRate).toFixed(2)}` : "";
+      const stock = Number(p.stock || 0);
+      return `
+        <div class="card">
+          <img src="${p.imagen || ''}" alt="${p.nombre}" onclick="openZoom('${p.imagen || ''}')" />
+          <div class="card-body">
+            <span class="card-cat">${p.categoria || ''}</span>
+            <div class="card-title">${p.nombre}</div>
+            <div class="card-price">$${price.toFixed(2)}</div>
+            <div class="card-bs">${bs}</div>
+            <div class="card-stock">Disponible: ${stock} und</div>
+            <button class="add-btn" ${stock <= 0 ? 'disabled' : ''} onclick="addToCart('${p.nombre.replace(/'/g, "\\'")}', ${price})">
+              ${stock > 0 ? 'Agregar al carrito' : 'Agotado'}
+            </button>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function openZoom(src) {
+    if (!src) return;
+    document.getElementById("zoom-img").src = src;
+    document.getElementById("zoom-modal").classList.add("open");
+  }
+
+  function addToCart(name, price) {
+    const existing = cart.find(i => i.name === name);
+    if (existing) existing.qty++;
+    else cart.push({ name, price, qty: 1 });
+    updateCartUI();
+  }
+
+  function updateCartUI() {
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    document.getElementById("cart-btn").textContent = `🛒 Carrito (${count}) - $${total.toFixed(2)}`;
+  }
+
+  document.getElementById("cart-btn").onclick = () => {
+    const list = document.getElementById("cart-items");
+    list.innerHTML = cart.length
+      ? cart.map((i, idx) => `
+          <div class="cart-item">
+            <span>${i.qty}x ${i.name}</span>
+            <span>$${(i.price * i.qty).toFixed(2)} <button onclick="removeItem(${idx})">✕</button></span>
+          </div>`).join("")
+      : "<p>Tu carrito está vacío.</p>";
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const bsTotal = bcvRate ? ` (Bs. ${(total * bcvRate).toFixed(2)})` : "";
+    document.getElementById("cart-total").textContent = `Total: $${total.toFixed(2)}${bsTotal}`;
+    document.getElementById("cart-modal").classList.add("open");
+  };
+
+  function removeItem(idx) {
+    cart.splice(idx, 1);
+    updateCartUI();
+    document.getElementById("cart-btn").click();
+  }
+
+  function sendWhatsApp() {
+    if (!cart.length) return;
+    const lines = cart.map(i => `• ${i.qty}x ${i.name} ($${(i.price * i.qty).toFixed(2)})`).join("\n");
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const msg = encodeURIComponent(`Hola Pao's World 👑, me gustaría hacer este pedido:\n\n${lines}\n\nTotal: $${total.toFixed(2)}`);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
+  }
+
+  document.getElementById("search").addEventListener("input", renderProducts);
+  loadCatalog();
+</script>
+</body>
+</html>
